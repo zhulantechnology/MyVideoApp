@@ -5,7 +5,11 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/comui_share_qq" />
+        android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:scaleType="center"
+        android:src="@drawable/loading_data_anim"
+        />
 </LinearLayout>
