@@ -2,6 +2,8 @@ package com.jeffrey.application;
 
 import android.app.Application;
 
+import com.jeffrey.core.AdSDKManager;
+
 /**
  * Created by Jun.wang on 2018/5/27.
  */
@@ -13,6 +15,11 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mApplication = this;
+        initAdSDK();
+    }
+
+    private void initAdSDK() {
+        AdSDKManager.init(this);
     }
 
     public static MyApplication getInstance() {
