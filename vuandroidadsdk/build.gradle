@@ -32,6 +32,7 @@ dependencies {
 
     //wangjun add begin
     compile 'com.squareup.okhttp3:okhttp:3.3.0' //okttp依赖
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
     // wangjun add end
 }
