@@ -36,6 +36,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // hiddenStatusBar();
         setContentView(R.layout.activity_home_layout);
 
         initView();
