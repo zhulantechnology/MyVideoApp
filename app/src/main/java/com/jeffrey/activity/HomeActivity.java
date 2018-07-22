@@ -41,6 +41,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
         initView();
 
+        //进入HomeActivity，首先显示HomeFragment
         mHomeFragment = new HomeFragment();
         fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -75,6 +76,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                 mMessageView.setBackgroundResource(R.drawable.comui_tab_message);
                 mMineView.setBackgroundResource(R.drawable.comui_tab_person);
 
+                // 先都隐藏，再显示当前TAB的Fragment
                 hideFragment(mCommonFragmentOne, fragmentTransaction);
                 hideFragment(mMessageFragment, fragmentTransaction);
                 hideFragment(mMineFragment, fragmentTransaction);
@@ -124,6 +126,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         fragmentTransaction.commit();
     }
 
+    // 隐藏Fragment接口， 采用hide方式
     private void hideFragment(Fragment fragment, FragmentTransaction ft) {
         if (fragment != null) {
             ft.hide(fragment);
