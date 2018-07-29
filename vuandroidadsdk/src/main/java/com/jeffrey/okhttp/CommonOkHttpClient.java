@@ -20,21 +20,34 @@ import okhttp3.Response;
 
 /**
  * Created by Jun.wang on 2018/5/30.
+ * @function 请求的发送，请求参数的配置，https的支持
  */
 
 public class CommonOkHttpClient {
 
-    private static final int TIME_OUT = 30;
+    private static final int TIME_OUT = 30;  // 超时参数
     private static OkHttpClient mOkHttpClient;
 
+    //  为client配置参数
     static {
+        // 创建CLient对象的构建者
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        // 为构建者填充参数
+        okHttpClientBuilder.cookieJar(new SimpleCookieJar());
+        okHttpClientBuilder.connectTimeout(TIME_OUT, TimeUnit.SECONDS);
+        okHttpClientBuilder.readTimeout(TIME_OUT, TimeUnit.SECONDS);
+        okHttpClientBuilder.writeTimeout(TIME_OUT, TimeUnit.SECONDS);
+        okHttpClientBuilder.followRedirects(true);
+
+        // 添加https支持  --start
         okHttpClientBuilder.hostnameVerifier(new HostnameVerifier() {
             @Override
             public boolean verify(String hostname, SSLSession session) {
                 return true;
             }
         });
+        okHttpClientBuilder.sslSocketFactory(HttpsUtils.initSSLSocketFactory(), HttpsUtils.initTrustManager());
+        // 添加https支持  --end
 
         /**
          *  为所有请求添加请求头，看个人需求
@@ -49,15 +62,8 @@ public class CommonOkHttpClient {
                 return chain.proceed(request);
             }
         });
-        okHttpClientBuilder.cookieJar(new SimpleCookieJar());
-        okHttpClientBuilder.connectTimeout(TIME_OUT, TimeUnit.SECONDS);
-        okHttpClientBuilder.readTimeout(TIME_OUT, TimeUnit.SECONDS);
-        okHttpClientBuilder.writeTimeout(TIME_OUT, TimeUnit.SECONDS);
-        okHttpClientBuilder.followRedirects(true);
-        /**
-         * trust all the https point
-         */
-        okHttpClientBuilder.sslSocketFactory(HttpsUtils.initSSLSocketFactory(), HttpsUtils.initTrustManager());
+
+        // 生成client对象
         mOkHttpClient = okHttpClientBuilder.build();
     }
 

@@ -22,7 +22,7 @@ import javax.net.ssl.X509TrustManager;
 
 /**
  * @author vision
- * @function support the sslsocket
+ * @function support the sslsocket  ,加密类型的SocketFactory
  */
 public class HttpsUtils {
     public static SSLSocketFactory getSslSocketFactory(InputStream[] certificates, InputStream bksFile, String password) {
