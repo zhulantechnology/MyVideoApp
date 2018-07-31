@@ -29,6 +29,7 @@ public class CommonJsonCallback implements Callback {
     /**
      * the logic layer exception, may alter in different app
      */
+    // 与服务器返回字段的一个对应关系
     protected final String RESULT_CODE = "ecode"; // 有返回则对于http请求来说是成功的，但还有可能是业务逻辑上的错误
     protected final int RESULT_CODE_VALUE = 0;
     protected final String ERROR_MSG = "emsg";
@@ -40,6 +41,7 @@ public class CommonJsonCallback implements Callback {
     /**
      * the java layer exception, do not same to the logic error
      */
+    // 自定义异常类型
     protected final int NETWORK_ERROR = -1; // the network relative error
     protected final int JSON_ERROR = -2; // the JSON relative error
     protected final int OTHER_ERROR = -3; // the unknow error
@@ -47,20 +49,22 @@ public class CommonJsonCallback implements Callback {
     /**
      * 将其它线程的数据转发到UI线程
      */
-    private Handler mDeliveryHandler;   //进行消息的转发
+    private Handler mDeliveryHandler;   //进行消息的转发，将子线程的数据转发到UI线程
     private DisposeDataListener mListener;
     private Class<?> mClass;   // 字节码--不太理解
 
+    // 构造方法
     public CommonJsonCallback(DisposeDataHandle handle) {
         this.mListener = handle.mListener;
         this.mClass = handle.mClass;
-        this.mDeliveryHandler = new Handler(Looper.getMainLooper());
+        this.mDeliveryHandler = new Handler(Looper.getMainLooper()); // 初始化mDeliveryHandler
     }
 
+    // 请求失败处理
     @Override
     public void onFailure(final Call call, final IOException ioexception) {
         /**
-         * 此时还在非UI线程，因此要转发
+         * 此时还在非UI线程，因此要转发，这样就可以将消息转发到了主线程
          */
         mDeliveryHandler.post(new Runnable() {
             @Override

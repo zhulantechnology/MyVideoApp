@@ -1,8 +1,8 @@
 package com.jeffrey.okhttp.listener;
 
 /**
- * @author vision
- *
+ * @author jeffrey
+ * @function 为了实现json数据的“字节码对象”到实体对象的转换封装
  */
 public class DisposeDataHandle
 {
