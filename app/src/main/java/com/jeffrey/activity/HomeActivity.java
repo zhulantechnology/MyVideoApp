@@ -20,6 +20,15 @@ import com.jeffrey.view.fragment.home.HomeFragment;
 import com.jeffrey.view.fragment.home.MessageFragment;
 import com.jeffrey.view.fragment.home.MineFragment;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     private HomeFragment mHomeFragment;
@@ -55,23 +64,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         fragmentTransaction.commit();
 
 
-    }
-
-    private void testOkHttpPacking() {
-        CommonOkHttpClient.sendRequest(CommonRequest
-                .createGetRequest("http://www.baidu.com", null),
-                new CommonJsonCallback(new DisposeDataHandle(new DisposeDataListener() {
-                    @Override
-                    public void onSuccess(Object responseObj) {
-                        Log.e("XXX","wangjun---test packing ---success---:"
-                                + responseObj.toString());
-                    }
-
-                    @Override
-                    public void onFailure(Object reasonObj) {
-                        Log.e("XXX","wangjun---test packing ---failure---:");
-                    }
-                })));
     }
 
     private void initView() {
@@ -129,6 +121,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                     mCurrent = mMessageFragment;
                     fragmentTransaction.show(mMessageFragment);
                 }
+                testOkHttpPacking();
+                //testOkHttp();
                 break;
             case R.id.mine_layout_view:
                 mMineView.setBackgroundResource(R.drawable.comui_tab_person_selected);
@@ -157,4 +151,45 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
             ft.hide(fragment);
         }
     }
+
+    // wangjun add for test begin
+    // okhttp测试 ---测试默认的okhttp，可以检测随意的url
+    public void testOkHttp() {
+        OkHttpClient client = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();
+        Request request = new Request.Builder().url("http://www.baidu.com").get().build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+                Log.e("XXX","AsyncRequest call fail------:" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.e("XXX","AsyncRequest call success------:"+ response.body().toString());
+                Log.e("XXX","AsyncRequest thread ID-------:"+Thread.currentThread().getId());
+            }
+        });
+    }
+    public static String HOME_RECOMMAND = "http://10.0.2.2:8080/MyWEB13/home_data.json";
+    // okhttp组件封装测试 ---测试我们封装的okhttp，但我们在reponse的时候会检测ecode，
+    // 只有是0才可以正确返回，所以只能是这个网址的json文件，跟服务器约定的
+    private void testOkHttpPacking() {
+        CommonOkHttpClient.sendRequest(CommonRequest
+                        .createGetRequest(HOME_RECOMMAND, null),
+                new CommonJsonCallback(new DisposeDataHandle(new DisposeDataListener() {
+                    @Override
+                    public void onSuccess(Object responseObj) {
+                        Log.e("XXX","wangjun---test packing ---success---:"
+                                + responseObj.toString());
+                    }
+
+                    @Override
+                    public void onFailure(Object reasonObj) {
+                        Log.e("XXX","wangjun---test packing ---failure---:"+reasonObj.toString());
+                    }
+                })));
+    }
+    // wangjun add for test end
 }
