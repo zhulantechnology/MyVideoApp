@@ -74,12 +74,7 @@ public class CommonJsonCallback implements Callback {
         });
     }
 
-    /**
-     * 真正的响应处理函数
-     * @param call
-     * @param response
-     * @throws IOException
-     */
+    // 真正的响应处理函数
     @Override
     public void onResponse(final Call call, final Response response) throws IOException {
         final String result = response.body().string();
@@ -108,10 +103,7 @@ public class CommonJsonCallback implements Callback {
         return tempList;
     }
 
-    /**
-     * 处理服务器返回来的响应数据
-     * @param responseObj
-     */
+    //处理服务器返回来的响应数据
     private void handleResponse(Object responseObj) {
         if (responseObj == null || responseObj.toString().trim().equals("")) {
             mListener.onFailure(new OkHttpException(NETWORK_ERROR, EMPTY_MSG));
