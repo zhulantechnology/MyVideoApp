@@ -71,6 +71,13 @@ public class CommonOkHttpClient {
         return mOkHttpClient;
     }
 
+    // 发送具体的http/https请求
+    public static Call sendRequest(Request request, CommonJsonCallback commonCallback) {
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(commonCallback);
+        return call;
+    }
+
     /**
      * 通过构造好的Request,Callback去发送请求
      *

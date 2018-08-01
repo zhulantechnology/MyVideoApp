@@ -123,17 +123,25 @@ public class CommonJsonCallback implements Callback {
              * 协议确定后看这里如何修改
              */
             JSONObject result = new JSONObject(responseObj.toString());
-            if (mClass == null) {
-                mListener.onSuccess(result);
-            } else {
-                // 需要将json对象转换为实体对象
-                Object obj = ResponseEntityToModule.parseJsonObjectToModule(result, mClass);
-                // 表明正确的转换为了实体对象
-                if (obj != null) {
-                    mListener.onSuccess(obj);
+            if (result.has(RESULT_CODE)) {
+                // 从json数据中取出响应码，若为0，则为正确响应
+                if (result.getInt(RESULT_CODE) == RESULT_CODE_VALUE) {
+                    if (mClass == null) {
+                        mListener.onSuccess(result);
+                    } else {
+                        // 需要将json对象转换为实体对象
+                        Object obj = ResponseEntityToModule.parseJsonObjectToModule(result, mClass);
+                        // 表明正确的转换为了实体对象
+                        if (obj != null) {
+                            mListener.onSuccess(obj);
+                        } else {
+                            // 返回的不是合法的json
+                            mListener.onFailure(new OkHttpException(JSON_ERROR, EMPTY_MSG));
+                        }
+                    }
                 } else {
-                    // 返回的不是合法的json
-                    mListener.onFailure(new OkHttpException(JSON_ERROR, EMPTY_MSG));
+                    //将服务器返回的异常回调到应用层处理
+                    mListener.onFailure(new OkHttpException(OTHER_ERROR, result.get(RESULT_CODE)));
                 }
             }
         } catch (Exception e) {

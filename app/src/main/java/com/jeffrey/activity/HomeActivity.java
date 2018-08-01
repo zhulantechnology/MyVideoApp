@@ -5,11 +5,17 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jeffrey.activity.base.BaseActivity;
+import com.jeffrey.okhttp.CommonOkHttpClient;
+import com.jeffrey.okhttp.listener.DisposeDataHandle;
+import com.jeffrey.okhttp.listener.DisposeDataListener;
+import com.jeffrey.okhttp.request.CommonRequest;
+import com.jeffrey.okhttp.response.CommonJsonCallback;
 import com.jeffrey.view.fragment.home.HomeFragment;
 import com.jeffrey.view.fragment.home.MessageFragment;
 import com.jeffrey.view.fragment.home.MineFragment;
@@ -47,6 +53,25 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.content_layout, mHomeFragment);
         fragmentTransaction.commit();
+
+
+    }
+
+    private void testOkHttpPacking() {
+        CommonOkHttpClient.sendRequest(CommonRequest
+                .createGetRequest("http://www.baidu.com", null),
+                new CommonJsonCallback(new DisposeDataHandle(new DisposeDataListener() {
+                    @Override
+                    public void onSuccess(Object responseObj) {
+                        Log.e("XXX","wangjun---test packing ---success---:"
+                                + responseObj.toString());
+                    }
+
+                    @Override
+                    public void onFailure(Object reasonObj) {
+                        Log.e("XXX","wangjun---test packing ---failure---:");
+                    }
+                })));
     }
 
     private void initView() {
