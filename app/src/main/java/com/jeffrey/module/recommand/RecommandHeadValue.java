@@ -7,9 +7,7 @@ import com.jeffrey.module.BaseModel;
 import java.util.ArrayList;
 
 /**
- * @author: vision
- * @function:
- * @date: 16/9/2
+ * Created by Jun.wang on 2018/6/4.
  */
 public class RecommandHeadValue extends BaseModel {
 

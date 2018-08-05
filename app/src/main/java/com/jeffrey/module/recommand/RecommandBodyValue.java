@@ -9,13 +9,7 @@ import com.jeffrey.module.monitor.emevent.EMEvent;
 import java.util.ArrayList;
 
 /**
- * *******************************************************
- *
- * @文件名称：RecommandValue.java
- * @文件作者：renzhiqiang
- * @创建时间：2015年7月9日 上午9:24:04
- * @文件描述：搜索实体
- * @修改历史：2015年7月9日创建初始版本 ********************************************************
+ * Created by Jun.wang on 2018/6/4.
  */
 public class RecommandBodyValue extends BaseModel {
 

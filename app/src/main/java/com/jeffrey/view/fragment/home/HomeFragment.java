@@ -61,9 +61,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
             @Override
             public void onSuccess(Object responseObj) {
                 Log.e("XXX", "onSuccess-----:" + responseObj.toString());
-              //  mRecommandData = (BaseRecommandModel) responseObj;
-                //更新UI
-               // showSuccessView();
+                // 完成真正的功能逻辑
+                mRecommandData = (BaseRecommandModel) responseObj;
+                //获得数据之后更新UI
+                //showSuccessView();
             }
 
             @Override
@@ -76,12 +77,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
     }
 
     //显示请求成功UI
-    /*private void showSuccessView() {
+   /* private void showSuccessView() {
         if (mRecommandData.data.list != null && mRecommandData.data.list.size() > 0) {
             mLoadingView.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
             //为listview添加头
-            mListView.addHeaderView(new HomeHeaderLayout(mContext, mRecommandData.data.head));
+           // mListView.addHeaderView(new HomeHeaderLayout(mContext, mRecommandData.data.head));
+            // 创建Adapter
             mAdapter = new CourseAdapter(mContext, mRecommandData.data.list);
             mListView.setAdapter(mAdapter);
             mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -98,10 +100,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
             showErrorView();
         }
     }
-
+    // 请求失败提示
     private void showErrorView() {
-    }*/
-
+    }
+*/
 
     @Nullable
     @Override
@@ -113,7 +115,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void initView() {
-
         mQRCodeView = (TextView) mContentView.findViewById(R.id.qrcode_view);
         mQRCodeView.setOnClickListener(this);
         mCategoryView = (TextView) mContentView.findViewById(R.id.category_view);
@@ -123,6 +124,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
         mListView = (ListView) mContentView.findViewById(R.id.list_view);
         mListView.setOnItemClickListener(this);
         mLoadingView = (ImageView) mContentView.findViewById(R.id.loading_view);
+        // 启动LoadingView动画
         AnimationDrawable anim = (AnimationDrawable) mLoadingView.getDrawable();
         anim.start();
     }

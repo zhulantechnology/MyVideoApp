@@ -1,9 +1,7 @@
 package com.jeffrey.module.monitor;
 
 /**
- * @author: qndroid
- * @function:
- * @date: 16/6/13
+ * Created by Jun.wang on 2018/6/4.
  */
 public class Monitor {
 

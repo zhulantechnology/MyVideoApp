@@ -20,7 +20,6 @@ public class RequestCenter {
                 createGetRequest(url, params), new DisposeDataHandle(listener, clazz));
     }
 
-    private static String testUrl = "http://com.jeffrey.test:8899";
     /**
      * 真正的发送首页应用请求
      * BaseRecommandModel.class ----具体要转为的实体对象？？
@@ -29,7 +28,5 @@ public class RequestCenter {
     public static void requestRecommandData(DisposeDataListener listener) {
         RequestCenter.postRequest(HttpConstants.HOME_RECOMMAND, null,
                 listener, BaseRecommandModel.class);
-
-       // RequestCenter.postRequest(testUrl, null, listener, BaseRecommandModel.class);
     }
 }

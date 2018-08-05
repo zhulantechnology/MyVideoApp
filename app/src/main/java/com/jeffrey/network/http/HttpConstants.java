@@ -9,12 +9,13 @@ public class HttpConstants {
 
     // 方便我们切换测试地址
     //private static final String ROOT_URL = "http://imooc.com/api";
-    private static final String ROOT_URL = "http://jeffrey.com/api";  //wangjun
+    private static final String ROOT_URL = "http://10.0.2.2:8080";  //wangjun
 
     /**
      * 首页产品请求接口
      */
-    public static String HOME_RECOMMAND = ROOT_URL + "/product/home_recommand.php";
+   // public static String HOME_RECOMMAND = ROOT_URL + "/product/home_recommand.php";
+    public static String HOME_RECOMMAND = ROOT_URL + "/WEB12/home_data.json";  //本地Tomcat服务器
 
     /**
      * 请求本地产品列表

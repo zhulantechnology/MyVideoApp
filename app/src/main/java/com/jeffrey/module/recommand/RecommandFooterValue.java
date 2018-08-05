@@ -4,9 +4,7 @@ package com.jeffrey.module.recommand;
 import com.jeffrey.module.BaseModel;
 
 /**
- * @author: vision
- * @function:
- * @date: 16/9/2
+ * Created by Jun.wang on 2018/6/4.
  */
 public class RecommandFooterValue extends BaseModel {
 
