@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jeffrey.activity.R;
+import com.jeffrey.adapter.CourseAdapter;
 import com.jeffrey.module.recommand.BaseRecommandModel;
 import com.jeffrey.network.http.RequestCenter;
 import com.jeffrey.okhttp.listener.DisposeDataListener;
@@ -42,7 +43,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
     /**
      * data
      */
-    //private CourseAdapter mAdapter;
+    private CourseAdapter mAdapter;
     private BaseRecommandModel mRecommandData;
 
     public HomeFragment() {
@@ -64,7 +65,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
                 // 完成真正的功能逻辑
                 mRecommandData = (BaseRecommandModel) responseObj;
                 //获得数据之后更新UI
-                //showSuccessView();
+                showSuccessView();
             }
 
             @Override
@@ -77,7 +78,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
     }
 
     //显示请求成功UI
-   /* private void showSuccessView() {
+    private void showSuccessView() {
         if (mRecommandData.data.list != null && mRecommandData.data.list.size() > 0) {
             mLoadingView.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
@@ -93,7 +94,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
 
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    mAdapter.updateAdInScrollView();
+                //    mAdapter.updateAdInScrollView();
                 }
             });
         } else {
@@ -103,7 +104,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
     // 请求失败提示
     private void showErrorView() {
     }
-*/
+
 
     @Nullable
     @Override
