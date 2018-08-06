@@ -15,7 +15,8 @@ public class HttpConstants {
      * 首页产品请求接口
      */
    // public static String HOME_RECOMMAND = ROOT_URL + "/product/home_recommand.php";
-    public static String HOME_RECOMMAND = ROOT_URL + "/WEB12/home_data.json";  //本地Tomcat服务器
+   // public static String HOME_RECOMMAND = ROOT_URL + "/WEB12/home_data.json";  //home 本地Tomcat服务器
+    public static String HOME_RECOMMAND = ROOT_URL + "/MyWEB13/home_data.json";  //company 本地Tomcat服务器
 
     /**
      * 请求本地产品列表

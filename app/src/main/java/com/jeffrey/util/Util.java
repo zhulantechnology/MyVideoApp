@@ -10,12 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.youdu.module.recommand.RecommandBodyValue;
+
+import com.jeffrey.module.recommand.RecommandBodyValue;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -27,7 +23,7 @@ import java.util.Hashtable;
  */
 public class Util {
 
-    public static Bitmap createQRCode(int width, int height, String source) {
+   /* public static Bitmap createQRCode(int width, int height, String source) {
         try {
             if (TextUtils.isEmpty(source)) {
                 return null;
@@ -53,7 +49,7 @@ public class Util {
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
 
     public static int getVersionCode(Context context) {
         int versionCode = 1;

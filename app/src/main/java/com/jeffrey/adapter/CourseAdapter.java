@@ -17,6 +17,7 @@ import com.jeffrey.activity.R;
 import com.jeffrey.adutil.Utils;
 import com.jeffrey.module.recommand.RecommandBodyValue;
 import com.jeffrey.util.ImageLoaderManager;
+import com.jeffrey.util.Util;
 
 import java.util.ArrayList;
 
