@@ -91,6 +91,37 @@ public class CourseAdapter extends BaseAdapter {
         //为空表示当前没有可用的缓存View
         if (convertView == null) {
             switch (type) {
+                case VIDOE_TYPE:
+                    //显示video卡片
+                    mViewHolder = new ViewHolder();
+                    convertView = mInflate.inflate(R.layout.item_video_layout, parent, false);
+                    mViewHolder.mVieoContentLayout = (RelativeLayout)
+                            convertView.findViewById(R.id.video_ad_layout);
+                    mViewHolder.mLogoView = (CircleImageView) convertView.findViewById(R.id.item_logo_view);
+                    mViewHolder.mTitleView = (TextView) convertView.findViewById(R.id.item_title_view);
+                    mViewHolder.mInfoView = (TextView) convertView.findViewById(R.id.item_info_view);
+                    mViewHolder.mFooterView = (TextView) convertView.findViewById(R.id.item_footer_view);
+                    mViewHolder.mShareView = (ImageView) convertView.findViewById(R.id.item_share_view);
+                    //为对应布局创建播放器
+                   /* mAdsdkContext = new VideoAdContext(mViewHolder.mVieoContentLayout,
+                            new Gson().toJson(value), null);
+                    mAdsdkContext.setAdResultListener(new AdContextInterface() {
+                        @Override
+                        public void onAdSuccess() {
+                        }
+
+                        @Override
+                        public void onAdFailed() {
+                        }
+
+                        @Override
+                        public void onClickVideo(String url) {
+                            Intent intent = new Intent(mContext, AdBrowserActivity.class);
+                            intent.putExtra(AdBrowserActivity.KEY_URL, url);
+                            mContext.startActivity(intent);
+                        }
+                    });*/
+                    break;
                 case CARD_SIGNAL_PIC:
                     mViewHolder = new ViewHolder();
                     Log.e("XXX", "wangjun----type-----:CARD_SIGNAL_PIC");
@@ -136,6 +167,8 @@ public class CourseAdapter extends BaseAdapter {
         }
         //填充item的数据
         switch (type) {
+            case VIDOE_TYPE:
+                break;
             case CARD_SIGNAL_PIC:
                 // 为ImageView完成图片的加载
                 mImagerLoader.displayImage(mViewHolder.mLogoView, value.logo);
