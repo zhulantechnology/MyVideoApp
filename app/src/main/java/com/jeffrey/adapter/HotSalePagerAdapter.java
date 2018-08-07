@@ -51,8 +51,8 @@ public class HotSalePagerAdapter extends PagerAdapter {
      * 载入图片进去，用当前的position 除以 图片数组长度取余数是关键
      */
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        final RecommandBodyValue value = mData.get(position % mData.size());
+        public Object instantiateItem(ViewGroup container, int position) {
+            final RecommandBodyValue value = mData.get(position % mData.size());
         View rootView = mInflate.inflate(R.layout.item_hot_product_pager_layout, null);
         TextView titleView = (TextView) rootView.findViewById(R.id.title_view);
         TextView infoView = (TextView) rootView.findViewById(R.id.info_view);

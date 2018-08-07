@@ -20,6 +20,7 @@ import com.jeffrey.module.recommand.BaseRecommandModel;
 import com.jeffrey.network.http.RequestCenter;
 import com.jeffrey.okhttp.listener.DisposeDataListener;
 import com.jeffrey.view.fragment.BaseFragment;
+import com.jeffrey.view.home.HomeHeaderLayout;
 
 /**
  * Created by Jun.wang on 2018/5/27.
@@ -83,7 +84,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
             mLoadingView.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
             //为listview添加头
-           // mListView.addHeaderView(new HomeHeaderLayout(mContext, mRecommandData.data.head));
+            mListView.addHeaderView(new HomeHeaderLayout(mContext, mRecommandData.data.head));
             // 创建Adapter
             mAdapter = new CourseAdapter(mContext, mRecommandData.data.list);
             mListView.setAdapter(mAdapter);

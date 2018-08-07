@@ -35,7 +35,7 @@ public class CourseAdapter extends BaseAdapter {
     private static final int VIDOE_TYPE = 0x00;
     private static final int CARD_SIGNAL_PIC = 0x01;
     private static final int CARD_TYPE_TWO = 0x02;
-    private static final int CARD_TYPE_THREE = 0x03;
+    private static final int CARD_VIEW_PAGER = 0x03;
 
 
     private Context mContext;
@@ -88,6 +88,7 @@ public class CourseAdapter extends BaseAdapter {
         int type = getItemViewType(position);
         Log.e("XXX", "wangjun----type-----:" + type);
         final RecommandBodyValue value = (RecommandBodyValue) getItem(position);
+
         //为空表示当前没有可用的缓存View
         if (convertView == null) {
             switch (type) {
@@ -147,7 +148,7 @@ public class CourseAdapter extends BaseAdapter {
                     mViewHolder.mFromView = (TextView) convertView.findViewById(R.id.item_from_view);
                     mViewHolder.mZanView = (TextView) convertView.findViewById(R.id.item_zan_view);
                     break;
-                case CARD_TYPE_THREE:
+                case CARD_VIEW_PAGER:
                     mViewHolder = new ViewHolder();
                     convertView = mInflate.inflate(R.layout.item_product_card_three_layout, null, false);
                     mViewHolder.mViewPager = (ViewPager) convertView.findViewById(R.id.pager);
@@ -168,9 +169,11 @@ public class CourseAdapter extends BaseAdapter {
         //填充item的数据
         switch (type) {
             case VIDOE_TYPE:
+                Log.e("XXX", "wangjun----VIDOE_TYPE-0----:");
                 break;
             case CARD_SIGNAL_PIC:
                 // 为ImageView完成图片的加载
+                Log.e("XXX", "wangjun----CARD_SIGNAL_PIC-1----:" + value.title);
                 mImagerLoader.displayImage(mViewHolder.mLogoView, value.logo);
                 mViewHolder.mTitleView.setText(value.title);
                 mViewHolder.mInfoView.setText(value.info.concat(mContext.getString(R.string.tian_qian)));
@@ -193,6 +196,7 @@ public class CourseAdapter extends BaseAdapter {
                 }
                 break;
             case CARD_TYPE_TWO:
+                Log.e("XXX", "wangjun----CARD_TYPE_TWO-2----:" + value.title);
                 mImagerLoader.displayImage(mViewHolder.mLogoView, value.logo);
                 mViewHolder.mTitleView.setText(value.title);
                 mViewHolder.mInfoView.setText(value.info.concat(mContext.getString(R.string.tian_qian)));
@@ -203,7 +207,8 @@ public class CourseAdapter extends BaseAdapter {
                 //为单个ImageView加载远程图片
                 mImagerLoader.displayImage(mViewHolder.mProductView, value.url.get(0));
                 break;
-            case CARD_TYPE_THREE:
+            case CARD_VIEW_PAGER:
+                Log.e("XXX", "wangjun----CARD_VIEW_PAGER-3----:");
                 break;
         }
         return convertView;
