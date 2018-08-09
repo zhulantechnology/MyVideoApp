@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import uk.co.senab.photoview.PhotoView;
 
 /**
- * Created by renzhiqiang on 16/8/31.
+ * Created by Jun.wang on 2018-08-08.
  */
 public class PhotoPagerAdapter extends PagerAdapter {
 

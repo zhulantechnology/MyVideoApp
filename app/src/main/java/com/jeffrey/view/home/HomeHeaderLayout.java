@@ -19,9 +19,8 @@ import com.jeffrey.view.viewpagerindictor.CirclePageIndicator;
 import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
 
 /**
- * @author: vision
- * @function:
- * @date: 16/9/2
+ *  Jun.wang 2018-08-08
+ *  自定义View，ListView的头部HeaderLayout
  */
 public class HomeHeaderLayout extends RelativeLayout {
 

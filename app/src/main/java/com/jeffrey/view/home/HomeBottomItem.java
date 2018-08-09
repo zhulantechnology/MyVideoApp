@@ -42,6 +42,7 @@ public class HomeBottomItem extends RelativeLayout {
         this(context, null, data);
     }
 
+    // 在构造方法中接受传入的数据和初始化View
     public HomeBottomItem(Context context, AttributeSet attrs, RecommandFooterValue data) {
         super(context, attrs);
         mContext = context;
