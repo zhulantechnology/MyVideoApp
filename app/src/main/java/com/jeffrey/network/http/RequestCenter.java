@@ -22,7 +22,7 @@ public class RequestCenter {
 
     /**
      * 真正的发送首页应用请求
-     * BaseRecommandModel.class ----具体要转为的实体对象？？
+     * BaseRecommandModel.class ----具体要转为的实体对象的类
      * @param listener
      */
     public static void requestRecommandData(DisposeDataListener listener) {

@@ -2,6 +2,7 @@ package com.jeffrey.okhttp.response;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 
 import com.jeffrey.adutil.ResponseEntityToModule;
@@ -30,7 +31,8 @@ public class CommonJsonCallback implements Callback {
      * the logic layer exception, may alter in different app
      */
     // 与服务器返回字段的一个对应关系
-    protected final String RESULT_CODE = "ecode"; // 有返回则对于http请求来说是成功的，但还有可能是业务逻辑上的错误
+    // 有返回则对于http请求来说是成功的，但还有可能是业务逻辑上的错误
+    protected final String RESULT_CODE = "ecode";
     protected final int RESULT_CODE_VALUE = 0;
     protected final String ERROR_MSG = "emsg";
     protected final String EMPTY_MSG = "";
@@ -57,6 +59,7 @@ public class CommonJsonCallback implements Callback {
     public CommonJsonCallback(DisposeDataHandle handle) {
         this.mListener = handle.mListener;
         this.mClass = handle.mClass;
+        //这个Handler是在主线程中
         this.mDeliveryHandler = new Handler(Looper.getMainLooper()); // 初始化mDeliveryHandler
     }
 
@@ -79,10 +82,12 @@ public class CommonJsonCallback implements Callback {
     public void onResponse(final Call call, final Response response) throws IOException {
         final String result = response.body().string();
         final ArrayList<String> cookieLists = handleCookie(response.headers());
+        Log.e("XXX", "onResponse-------Thread ID---:" + Thread.currentThread().getId());
         mDeliveryHandler.post(new Runnable() {
             @Override
             public void run() {
                 handleResponse(result);
+                Log.e("XXX", "onResponse---run----Thread ID---:" + Thread.currentThread().getId());
                 /**
                  * handle the cookie
                  */

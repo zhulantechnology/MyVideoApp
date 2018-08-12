@@ -55,9 +55,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestRecommandData();
+        Log.e("XXX", "---onCreate----Thread ID---:" + Thread.currentThread().getId());
     }
 
-    //发送推荐产品请求
+    //
     private void requestRecommandData() {
         RequestCenter.requestRecommandData(new DisposeDataListener() {
             @Override
