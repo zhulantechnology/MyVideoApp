@@ -1,5 +1,7 @@
 package com.jeffrey.okhttp.request;
 
+import android.util.Log;
+
 import java.util.Map;
 
 import okhttp3.FormBody;
@@ -44,6 +46,7 @@ public class CommonRequest {
                         append(entry.getValue()).append("&");
             }
         }
+        //Log.e("XXX", "urlBuilder ----------:" + urlBuilder);
         return new Request.Builder().url(urlBuilder.substring(0,urlBuilder.length() - 1))
                 .get().build();
     }

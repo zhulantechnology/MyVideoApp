@@ -55,7 +55,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestRecommandData();
-        Log.e("XXX", "---onCreate----Thread ID---:" + Thread.currentThread().getId());
+        //Log.e("XXX", "---onCreate----Thread ID---:" + Thread.currentThread().getId());
     }
 
     //

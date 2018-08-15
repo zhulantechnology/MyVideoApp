@@ -13,13 +13,9 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 
 
-/**********************************************************
- * @文件名称：ResponseEntityToModule.java
- * @文件作者：qndroid
- * @创建时间：2015年7月31日 上午10:51:44
- * @文件描述：递归ORM映射(有反射，不能被混淆)
- * @修改历史：2015年7月31日创建初始版本
- **********************************************************/
+/**
+ * 将Json字符串转换为对应的实体类对象
+ */
 public class ResponseEntityToModule {
 
     public static Object parseJsonToModule(String jsonContent, Class<?> clazz) {
@@ -86,7 +82,8 @@ public class ResponseEntityToModule {
             if (!jsonObj.has(name) || jsonObj.isNull(name)) {
                 continue;
             }
-            if (cls.isPrimitive() || isWrappedPrimitive(cls))// 锟斤拷锟斤拷腔锟斤拷锟斤拷锟斤拷锟絙oolean,byte,char,short,int,long,float,double,void
+            // PrimaryKey 字段必须是String、 integer、byte、short、 int、long 以及它们的封装类Byte, Short, Integer, and Long
+            if (cls.isPrimitive() || isWrappedPrimitive(cls))// 支持的数据类型boolean,byte,char,short,int,long,float,double,void
             {
                 setPrimitiveFieldValue(f, moduleObj, jsonObj.get(name));
             } else {
