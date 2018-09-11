@@ -2,17 +2,28 @@ package com.jeffrey.widget;
 
 import android.content.Context;
 import android.content.pm.ProviderInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.sax.RootElement;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -60,10 +71,30 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
 
 
     // Data
+    private String mUrl;    // 视频地址
+    private String mFrameURI;
+    private boolean isMute;
     private int mScreenWidth, mDestationHeight;
 
     private MediaPlayer mediaPlayer;
     private ADVideoPlayerListener listener;
+    private ADFrameImageLoadListener mFrameLoadListener;
+
+    private Surface videoSurface;
+
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case TIME_MSG:
+                    if (isPlaying()) {
+                        listener.onBufferUpdate(getCurrentPosition());
+                        sendEmptyMessageDelayed(TIME_MSG, TIME_INVAL);
+                    }
+                    break;
+            }
+        }
+    };
 
     // 自定义构造方法，传递上下文Context和这个View的父容器
     public CustomVideoView(Context context, ViewGroup parentContainer) {
@@ -164,9 +195,170 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
         }
     }
 
+    // 暂停视频播放
+    public void pause() {
+        if (this.playerState != STATE_PLAYING) {
+            return;
+        }
+        setCurrentPlayState(STATE_PAUSING);
+        if (isPlaying()) {
+            mediaPlayer.pause();
+            if (!this.canPlay) {
+                this.mediaPlayer.seekTo(0);
+            }
+        }
+        this.showPauseView(false);
+        mHandler.removeCallbacksAndMessages(null);
+    }
+
+    // 恢复视频播放
+    public void resume() {
+        if (this.playerState != STATE_PAUSING) {
+            return;
+        }
+        if (!isPlaying()) {
+            entryResumeState(); //置为播放中的状态值
+            mediaPlayer.setOnCompletionListener(null);
+            mediaPlayer.start();
+            mHandler.sendEmptyMessage(TIME_MSG);
+            showPauseView(true);
+        } else {
+            showPauseView(false);
+        }
+    }
+
+    private void showPauseView(boolean show) {
+        mFullBtn.setVisibility(show ? View.VISIBLE : View.GONE);
+        mMiniPlayBtn.setVisibility(show ? View.GONE : View.VISIBLE);
+        mLoadingBar.clearAnimation();
+        mLoadingBar.setVisibility(View.GONE);
+        if (!show) {
+            mFrameView.setVisibility(View.VISIBLE);
+            loadFrameImage();
+        } else {
+            mFrameView.setVisibility(View.GONE);
+        }
+        
+    }
+
+    public boolean isPlaying() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setIsComplete(boolean isComplete) {
+        this.mIsComplete = isComplete;
+    }
+
+    public void setIsRealPause(boolean isRealPause) {
+        this.mIsRealPause = isRealPause;
+    }
+
+    public void setDataSource(String url) {
+        this.mUrl = url;
+    }
+
+    public void setFrameURI(String url) {
+        this.mFrameURI = url;
+    }
+
+    // 进入播放状态时的状态更新
+    private void entryResumeState() {
+        canPlay = true;
+        setCurrentPlayState(STATE_PLAYING);
+        setIsRealPause(false);
+        setIsComplete(false);
+    }
+
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        videoSurface = new Surface(surface);
+        checkMediaPlayer();
+        mediaPlayer.setSurface(videoSurface);
+        load();
+    }
 
+    private synchronized void checkMediaPlayer() {
+        if (mediaPlayer == null) {
+            mediaPlayer = createMediaPlayer();
+        }
+    }
+
+    public void stop() {
+        if (this.mediaPlayer != null) {
+            this.mediaPlayer.reset();
+            this.mediaPlayer.setOnSeekCompleteListener(null);
+            this.mediaPlayer.stop();
+            this.mediaPlayer.release();
+            this.mediaPlayer = null;
+        }
+        mHandler.removeCallbacksAndMessages(null);
+        setCurrentPlayState(STATE_IDLE);
+
+        if (mCurrentCount < LOAD_TOTAL_COUNT) {
+            mCurrentCount += 1;
+            load();
+        } else {
+            showPauseView(false);
+        }
+    }
+
+    // 根据url加载视频
+    public void load() {
+        if (this.playerState != STATE_IDLE) {
+            return;
+        }
+        showLoadingView();
+        try {
+            setCurrentPlayState(STATE_IDLE);
+            checkMediaPlayer(); //完成播放器的创建工作
+            mute(true);
+            mediaPlayer.setDataSource(this.mUrl);
+            mediaPlayer.prepareAsync();  //开始异步加载
+        } catch (Exception e) {
+            stop();
+        }
+    }
+
+    // 设置静音
+    public void mute(boolean mute) {
+        isMute = mute;
+        if (mediaPlayer != null && this.audioManager != null) {
+            float volume = isMute ? 0.0f : 1.0f;
+            mediaPlayer.setVolume(volume, volume);
+        }
+    }
+
+    public void setFrameLoadListener(ADFrameImageLoadListener frameLoadListener) {
+        this.mFrameLoadListener = frameLoadListener;
+    }
+
+    private void showLoadingView() {
+        mFullBtn.setVisibility(View.GONE);
+        mLoadingBar.setVisibility(View.GONE);
+        AnimationDrawable anim = (AnimationDrawable) mLoadingBar.getBackground();
+        anim.start();
+        mMiniPlayBtn.setVisibility(View.GONE);
+        mFrameView.setVisibility(View.GONE);
+        loadFrameImage();
+    }
+
+    private MediaPlayer createMediaPlayer() {
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.reset();
+        mediaPlayer.setOnPreparedListener(this);
+        mediaPlayer.setOnCompletionListener(this);
+        mediaPlayer.setOnInfoListener(this);
+        mediaPlayer.setOnErrorListener(this);
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        if (videoSurface != null && videoSurface.isValid()) {
+            mediaPlayer.setSurface(videoSurface);
+        } else {
+            stop();
+        }
+        return mediaPlayer;
     }
 
     @Override
@@ -184,6 +376,43 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
 
     }
 
+    private void setCurrentPlayState(int state) {
+        playerState = state;
+    }
+
+    // 异步加载定帧图
+    private void loadFrameImage() {
+        if (mFrameLoadListener != null) {
+            mFrameLoadListener.onStartFrameLoad(mFrameURI, new ImageLoaderListener() {
+                @Override
+                public void onLoadingComplete(Bitmap loadedImage) {
+                    if (loadedImage != null) {
+                        mFrameView.setScaleType(ScaleType.FIT_XY);
+                        mFrameView.setImageBitmap(loadedImage);
+                    } else {
+                        mFrameView.setScaleType(ScaleType.FIT_CENTER);
+                        mFrameView.setImageResource(R.drawable.xadsdk_img_error);
+                    }
+                }
+            });
+        }
+    }
+
+    // 当前的播放位置
+    public int getCurrentPosition() {
+        if (this.mediaPlayer != null) {
+            return mediaPlayer.getCurrentPosition();
+        }
+        return 0;
+    }
+
+    public int getDuration() {
+        if (mediaPlayer != null) {
+            return mediaPlayer.getDuration();
+        }
+        return 0;
+    }
+
     public interface ADVideoPlayerListener {
         public void onBufferUpdate(int time);
         public void onClickFullScreenBtn();
@@ -193,7 +422,15 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
         public void onAdVideoLoadSuccess();
         public void onAdVideoLoadFailed();
         public void onAdVideoLoadComplete();
+    }
 
+    public interface ImageLoaderListener {
+        // 如果图片下载不成功，传null  （应该是我们经常看视频暂停时的广告点击图片）
+        void onLoadingComplete(Bitmap loadedImage);
+    }
+
+    public interface ADFrameImageLoadListener {
+        void onStartFrameLoad(String url, ImageLoaderListener listener);
     }
 }
 
