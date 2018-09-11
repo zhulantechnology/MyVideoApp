@@ -241,6 +241,27 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
         
     }
 
+    // 销毁我们的自定义View
+    public void destory() {
+        if (this.mediaPlayer != null) {
+            this.mediaPlayer.setOnSeekCompleteListener(null);
+            this.mediaPlayer.stop();
+            this.mediaPlayer.release();
+            this.mediaPlayer = null;
+        }
+        setBackgroundResource(STATE_IDLE);
+        mCurrentCount = 0;
+        setIsComplete(false);
+        setIsRealPause(false);
+        unRegisterBroadcastReceiver();
+        mHandler.removeCallbacksAndMessages(null); //release all message and runnable
+        showPauseView(false);   //除了播放和loading外其余任何状态都显示pause
+    }
+
+    private void unRegisterBroadcastReceiver() {
+
+    }
+
     public boolean isPlaying() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             return true;

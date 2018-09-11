@@ -32,8 +32,18 @@ public class VideoAdContext implements AdSDKSlotListener {
     public void load() {
         if (mInstance != null && mInstance.resource != null) {
             mAdSlot = new VideoAdSlot(mInstance, this, mFrameLoadListener);
-
+            //sendAnalizeReport(Params.ad_analize, HttpConstant.AD_DATA_SUCCESS);
+        } else {
+            mAdSlot = new VideoAdSlot(null, this, mFrameLoadListener);
+            if (mListener != null) {
+                mListener.onAdFailed();
+            }
         }
+    }
+
+    // release the ad
+    public void destory() {
+        mAdSlot.destroy();
     }
 
     @Override
