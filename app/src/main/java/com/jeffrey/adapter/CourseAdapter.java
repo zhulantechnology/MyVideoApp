@@ -13,8 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jeffrey.activity.R;
 import com.jeffrey.adutil.Utils;
+import com.jeffrey.core.video.VideoAdContext;
 import com.jeffrey.module.recommand.RecommandBodyValue;
 import com.jeffrey.util.ImageLoaderManager;
 import com.jeffrey.util.Util;
@@ -40,6 +42,7 @@ public class CourseAdapter extends BaseAdapter {
     private Context mContext;
     private ViewHolder mViewHolder;
     private LayoutInflater mInflate;
+    private VideoAdContext mAdsdkContext;
 
     private ArrayList<RecommandBodyValue> mData;
     // 异步图片加载工具类
@@ -103,9 +106,10 @@ public class CourseAdapter extends BaseAdapter {
                     mViewHolder.mFooterView = (TextView) convertView.findViewById(R.id.item_footer_view);
                     mViewHolder.mShareView = (ImageView) convertView.findViewById(R.id.item_share_view);
                     //为对应布局创建播放器
-                   /* mAdsdkContext = new VideoAdContext(mViewHolder.mVieoContentLayout,
+                    String tempData = new Gson().toJson(value);
+                    mAdsdkContext = new VideoAdContext(mViewHolder.mVieoContentLayout,
                             new Gson().toJson(value), null);
-                    mAdsdkContext.setAdResultListener(new AdContextInterface() {
+                    /*mAdsdkContext.setAdResultListener(new AdContextInterface() {
                         @Override
                         public void onAdSuccess() {
                         }

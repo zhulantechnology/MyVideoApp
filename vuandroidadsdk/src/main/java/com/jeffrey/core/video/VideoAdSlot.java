@@ -86,7 +86,7 @@ public class VideoAdSlot implements ADVideoPlayerListener {
     }
 
     public void destory() {
-        mVideoView.destroy();
+        mVideoView.destory();
         mVideoView = null;
         mContext = null;
         mXAdInstance = null;

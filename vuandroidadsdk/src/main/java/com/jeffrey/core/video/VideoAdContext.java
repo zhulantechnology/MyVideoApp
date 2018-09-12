@@ -43,12 +43,12 @@ public class VideoAdContext implements AdSDKSlotListener {
 
     // release the ad
     public void destory() {
-        mAdSlot.destroy();
+        mAdSlot.destory();
     }
 
     @Override
     public ViewGroup getAdParent() {
-        return null;
+        return mParentView;
     }
 
     @Override
