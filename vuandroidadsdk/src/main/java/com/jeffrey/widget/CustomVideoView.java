@@ -14,6 +14,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.sax.RootElement;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
@@ -141,7 +142,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
         this.listener = listener;
     }
 
-    private void showPlayView() {
+    private void startPlayView() {
         mLoadingBar.clearAnimation();
         mLoadingBar.setVisibility(View.GONE);
         mMiniPlayBtn.setVisibility(View.GONE);
@@ -175,7 +176,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        showPlayView();
+        startPlayView();
         mediaPlayer = mp;
         if (mediaPlayer != null) {
             mediaPlayer.setOnBufferingUpdateListener(this);
@@ -186,10 +187,12 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
             // 满足自动播放条件，则直接播放
             if (Utils.canAutoPlay(getContext(), AdParameters.getCurrentSetting()) &&
                     Utils.getVisiblePercent(mParentContainer) > SDKConstant.VIDEO_SCREEN_PERCENT) {
-                setCurrentPlayState(STATE_PAUSING);
+                setCurrentPlayState(STATE_PAUSING); // 无论之前有没有播放，先置为pause，再
+                Log.e("XXX", "CustomVideoView----resume");
                 resume();
             } else {
                 setCurrentPlayState(STATE_PLAYING);
+                Log.e("XXX", "CustomVideoView----pause");
                 pause();
             }
         }
@@ -220,6 +223,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
             entryResumeState(); //置为播放中的状态值
             mediaPlayer.setOnCompletionListener(null);
             mediaPlayer.start();
+            Log.e("XXX", "CustomVideoView----resume--start");
             mHandler.sendEmptyMessage(TIME_MSG);
             showPauseView(true);
         } else {
