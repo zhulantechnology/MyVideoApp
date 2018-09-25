@@ -1,6 +1,9 @@
 package com.jeffrey.widget;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ProviderInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
@@ -80,6 +83,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
     private MediaPlayer mediaPlayer;
     private ADVideoPlayerListener listener;
     private ADFrameImageLoadListener mFrameLoadListener;
+    private ScreenEventReceiver mScreenReceiver;
 
     private Surface videoSurface;
 
@@ -104,7 +108,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
         audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         initData();
         initView();
-        //registerBroadcastReceiver();
+        registerBroadcastReceiver();
     }
 
     private void initData() {
@@ -161,12 +165,24 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
 
     @Override
     public void onCompletion(MediaPlayer mp) {
+        if (listener != null) {
+            listener.onAdVideoLoadComplete();
+        }
+        playBack();
+        setIsComplete(true); // 播放完毕进入真正的暂停状态，滑动的时候不会自动播放的
+        setIsRealPause(true);
+    }
+
+    // 播放完毕后回到初始状态
+    public void playBack() {
 
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        return false;
+       // return false; // 系统默认出来
+
+        return true;  // 如果我们自己处理完，return true，系统就不会再处理了。
     }
 
     @Override
@@ -184,17 +200,19 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
             if (listener != null) {
                 listener.onAdVideoLoadSuccess();
             }
-            // 满足自动播放条件，则直接播放
-            if (Utils.canAutoPlay(getContext(), AdParameters.getCurrentSetting()) &&
-                    Utils.getVisiblePercent(mParentContainer) > SDKConstant.VIDEO_SCREEN_PERCENT) {
-                setCurrentPlayState(STATE_PAUSING); // 无论之前有没有播放，先置为pause，再
-                Log.e("XXX", "CustomVideoView----resume");
-                resume();
-            } else {
-                setCurrentPlayState(STATE_PLAYING);
-                Log.e("XXX", "CustomVideoView----pause");
-                pause();
-            }
+            decideCanPlay();
+        }
+    }
+
+    private void decideCanPlay() {
+        // 满足自动播放条件，则直接播放
+        if (Utils.canAutoPlay(getContext(), AdParameters.getCurrentSetting()) &&
+                Utils.getVisiblePercent(mParentContainer) > SDKConstant.VIDEO_SCREEN_PERCENT) {
+            setCurrentPlayState(STATE_PAUSING);
+            resume();
+        } else {
+            setCurrentPlayState(STATE_PLAYING);
+            pause();
         }
     }
 
@@ -437,6 +455,84 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
         }
         return 0;
     }
+
+    public boolean isRealPause() {
+        return mIsRealPause;
+    }
+
+    public boolean isComplete() {
+        return mIsComplete;
+    }
+
+    @Override
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        if (visibility == VISIBLE && playerState == STATE_PAUSING) {
+            if (isRealPause() && isComplete()) {
+                pause();
+            } else {
+                decideCanPlay();
+            }
+        } else {
+            pause();
+        }
+    }
+
+    // 销毁我们的自定义View
+    public void destroy() {
+        if (this.mediaPlayer != null) {
+            this.mediaPlayer.setOnSeekCompleteListener(null);
+            this.mediaPlayer.stop();
+            this.mediaPlayer.release();
+            this.mediaPlayer = null;
+        }
+        setCurrentPlayState(STATE_IDLE);
+        mCurrentCount = 0;
+        setIsRealPause(false);
+        setIsComplete(false);
+        unRegisterBroadcastReceiver();
+        mHandler.removeCallbacksAndMessages(null);// release all message and runnable
+        showPauseView(false);
+    }
+
+    private void registerBroadcastReceiver() {
+        if (mScreenReceiver == null) {
+            mScreenReceiver = new ScreenEventReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_SCREEN_OFF);
+            filter.addAction(Intent.ACTION_USER_PRESENT);
+            getContext().registerReceiver(mScreenReceiver, filter);
+        }
+    }
+
+    private void unRegisterBroadcastReceiver() {
+        if (mScreenReceiver != null) {
+            getContext().unregisterReceiver(mScreenReceiver);
+        }
+    }
+
+    private class ScreenEventReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case Intent.ACTION_USER_PRESENT:
+                    if (playerState == STATE_PAUSING) {
+                        if (isRealPause()) {
+                            pause();
+                        } else {
+                            decideCanPlay();
+                        }
+                    }
+                    break;
+                case Intent.ACTION_SCREEN_OFF:
+                    if (playerState == STATE_PLAYING){
+                        pause();
+                    }
+                    break;
+            }
+        }
+    }
+
 
     public interface ADVideoPlayerListener {
         public void onBufferUpdate(int time);
