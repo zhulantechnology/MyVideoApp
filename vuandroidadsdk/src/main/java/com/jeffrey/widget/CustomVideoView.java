@@ -280,9 +280,6 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
         showPauseView(false);   //除了播放和loading外其余任何状态都显示pause
     }
 
-    private void unRegisterBroadcastReceiver() {
-
-    }
 
     public boolean isPlaying() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
@@ -531,6 +528,52 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
                     break;
             }
         }
+    }
+
+    // 跳转到指定点播放视频
+    public void seekAndResume(int position) {
+        if (mediaPlayer != null) {
+            showPauseView(true);
+            entryResumeState();
+            mediaPlayer.seekTo(position);
+            mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+                @Override
+                public void onSeekComplete(MediaPlayer mp) {
+                    mediaPlayer.start();
+                    mHandler.sendEmptyMessage(TIME_MSG);
+                }
+            });
+        }
+    }
+
+    // 跳到指定点暂停视频
+    public void seekAndPause(int position) {
+        if (this.playerState != STATE_PLAYING) {
+            return;
+        }
+        showPauseView(false); // false时就显示暂停时的播放器UI
+        setCurrentPlayState(STATE_PAUSING);
+        if (isPlaying()) {
+            mediaPlayer.seekTo(position);
+            // mediaPlayer.pause();  // 这种方式只能适用于部分手机，下面的方式适配性好
+            // seekTo的事件监听
+            /*
+                seekTo 之后的动作需要在完成seekTo后执行，使用下面的回调才能保证
+             */
+            mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+                @Override
+                public void onSeekComplete(MediaPlayer mp) {
+                    mediaPlayer.pause();
+                    mHandler.removeCallbacksAndMessages(null);
+                }
+            });
+            
+        }
+    }
+
+    public void isShowFullBtn(boolean isShow) {
+        mFullBtn.setImageResource(isShow ? R.drawable.xadsdk_ad_mini : R.drawable.xadsdk_ad_mini_null);
+        mFullBtn.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
 

@@ -217,6 +217,13 @@ public class CourseAdapter extends BaseAdapter {
         return convertView;
     }
 
+    // 第二步：自动播放方法
+    public void updateAdInScrollView() {
+        if (mAdsdkContext != null) {
+            mAdsdkContext.updateAdInScrollView();
+        }
+    }
+
 
     //动态添加ImageView
     private ImageView createImageView(String url) {

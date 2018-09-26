@@ -41,6 +41,14 @@ public class VideoAdContext implements AdSDKSlotListener {
         }
     }
 
+    public void updateAdInScrollView() {
+        if (mAdSlot != null) {
+            mAdSlot.updateAdInScrollView();
+        }
+    }
+
+
+
     // release the ad
     public void destory() {
         mAdSlot.destory();

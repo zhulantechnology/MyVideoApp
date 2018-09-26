@@ -4,6 +4,9 @@ import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.jeffrey.adutil.Utils;
+import com.jeffrey.constant.SDKConstant;
+import com.jeffrey.core.AdParameters;
 import com.jeffrey.module.AdValue;
 import com.jeffrey.widget.CustomVideoView;
 import com.jeffrey.widget.CustomVideoView.ADFrameImageLoadListener;
@@ -48,6 +51,112 @@ public class VideoAdSlot implements ADVideoPlayerListener {
         paddingView.setLayoutParams(mVideoView.getLayoutParams());
         mParentView.addView(paddingView);
         mParentView.addView(mVideoView);
+    }
+
+    //pause the  video
+    private void pauseVideo(boolean isAuto) {
+        if (mVideoView != null) {
+            if (isAuto) {
+                //发自动暂停监测
+/*                if (!isRealPause() && isPlaying()) {
+                    try {
+                        ReportManager.pauseVideoReport(mXAdInstance.event.pause.content, getPosition());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }*/
+            }
+            mVideoView.seekAndPause(0);
+        }
+    }
+
+    //这个滑动的更新只是提供一个功能，其实这里不能自动检测，是需要放在listview或者scrollView中才可以
+    public void updateAdInScrollView() {
+        int currentArea = Utils.getVisiblePercent(mParentView);
+        //小于0表示未出现在屏幕上，不做任何处理
+        if (currentArea <= 0) {
+            return;
+        }
+        //刚要滑入和滑出时，异常状态的处理
+        // Listview中包含这个View的Item在划入或划出的时候会有这样的异常变化
+        if (Math.abs(currentArea - lastArea) >= 100) {
+            return;
+        }
+        if (currentArea < SDKConstant.VIDEO_SCREEN_PERCENT) {
+            //进入自动暂停状态，用这个变量控制，如果视频已经在pause状态了，就不需要再pause了
+            if (canPause) {
+                pauseVideo(true);
+                canPause = false; // 滑动事件过滤
+            }
+            lastArea = 0;
+            // 不是真正的暂停，不是真正的播放完成
+            mVideoView.setIsComplete(false); // 滑动出50%后标记为从头开始播
+            mVideoView.setIsRealPause(false); //以前叫setPauseButtonClick()
+            return;
+        }
+
+        if (isRealPause() || isComplete()) {
+            //进入手动暂停或者播放结束，播放结束和不满足自动播放条件都作为手动暂停
+            pauseVideo(false);
+            canPause = false;
+            return;
+        }
+
+        //满足自动播放条件或者用户主动点击播放，开始播放
+        if (Utils.canAutoPlay(mContext, AdParameters.getCurrentSetting())
+                || isPlaying()) {
+            lastArea = currentArea;
+            resumeVideo();
+            canPause = true;
+            mVideoView.setIsRealPause(false);
+        } else {
+            pauseVideo(false);
+            mVideoView.setIsRealPause(true); //不能自动播放则设置为手动暂停效果
+        }
+    }
+
+    //resume the video
+    private void resumeVideo() {
+        if (mVideoView != null) {
+            mVideoView.resume();
+            if (isPlaying()) {
+            //    sendSUSReport(true); //发自动播放监测
+            }
+        }
+    }
+
+    private boolean isPlaying() {
+        if (mVideoView != null) {
+            return mVideoView.isPlaying();
+        }
+        return false;
+    }
+
+
+
+    private boolean isRealPause() {
+        if (mVideoView != null) {
+            return mVideoView.isRealPause();
+        }
+        return false;
+    }
+
+    private boolean isComplete() {
+        if (mVideoView != null) {
+            return mVideoView.isComplete();
+        }
+        return false;
+    }
+    private void bigPlayComplete() {
+        if (mVideoView.getParent() == null) {
+            mParentView.addView(mVideoView);
+        }
+        mVideoView.setTranslationY(0); //防止动画导致偏离父容器
+        mVideoView.isShowFullBtn(true);
+        mVideoView.mute(true);
+        mVideoView.setListener(this);
+        mVideoView.seekAndPause(0);
+        canPause = false;
     }
 
     @Override
