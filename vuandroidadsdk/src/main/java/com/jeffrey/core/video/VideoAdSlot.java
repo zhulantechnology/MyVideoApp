@@ -1,6 +1,7 @@
 package com.jeffrey.core.video;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -11,6 +12,8 @@ import com.jeffrey.module.AdValue;
 import com.jeffrey.widget.CustomVideoView;
 import com.jeffrey.widget.CustomVideoView.ADFrameImageLoadListener;
 import com.jeffrey.widget.CustomVideoView.ADVideoPlayerListener;
+import com.jeffrey.widget.VideoFullDialog;
+import com.jeffrey.widget.VideoFullDialog.FullToSmallListener;
 
 /**
  * Created by Jun.wang on 2018/9/11.
@@ -27,6 +30,8 @@ public class VideoAdSlot implements ADVideoPlayerListener {
     private AdSDKSlotListener mSlotListener;  // 传递消息到app context层
     private boolean canPause = false;   // 是否可自动暂停
     private int lastArea = 0;   // 防止将要滑入滑出时播放器的状态改变
+
+    private FullToSmallListener mListener;
 
     public VideoAdSlot(AdValue adInstance, AdSDKSlotListener slotListener,
                        ADFrameImageLoadListener frameLoadListener) {
@@ -164,9 +169,51 @@ public class VideoAdSlot implements ADVideoPlayerListener {
 
     }
 
+    // 实现play层接口，从小屏到全屏播放功能
     @Override
     public void onClickFullScreenBtn() {
+        try {
+          //  ReportManager.fullScreenReport(mXAdInstance.event.full.content, getPosition());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        // 获取videoView在当前界面的属性
+        Bundle bundle = Utils.getViewProperty(mParentView);
+        // 将播放器从view树种移除
+        mParentView.removeView(mVideoView);
+        // 创建全屏播放dialog
+        VideoFullDialog dialog = new VideoFullDialog(mContext, mVideoView, mXAdInstance,
+                                    mVideoView.getCurrentPosition());
+        dialog.setListener(new FullToSmallListener() {
+            @Override
+            public void getCurrentPlayPosition(int position) {
+                // 在全屏视频播放时点击了返回
+                backToSmallMode(position);
+            }
+
+            @Override
+            public void playComplete() {
+                // 全屏播放完的事件回调
+                bigPlayComplete();
+            }
+        });
+        dialog.setViewBundle(bundle);
+        dialog.setSlotListener(mSlotListener);
+        dialog.show();
+    }
+
+    private void backToSmallMode(int position) {
+        // 重新添加到View树中
+        if (mVideoView.getParent() == null) {
+            mParentView.addView(mVideoView);
+        }
+        mVideoView.setTranslationY(0); // 防止动画导致偏离父容器
+        mVideoView.isShowFullBtn(true); // 显示全屏按钮
+        mVideoView.mute(true);  // 小屏静音
+        mVideoView.setListener(this);   // 重新设置监听为我们的业务逻辑层
+        mVideoView.seekAndResume(position); // 使播放器跳到指定位置并播放
+        canPause = true;    // 标为可自动暂停
     }
 
     @Override
@@ -203,6 +250,15 @@ public class VideoAdSlot implements ADVideoPlayerListener {
 
     @Override
     public void onAdVideoLoadComplete() {
+        try {
+         //   ReportManager.sueReport(mXAdInstance.endMonitor, false, getDuration());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (mSlotListener != null) {
+            mSlotListener.onAdVideoLoadComplete();
+        }
+        mVideoView.setIsRealPause(true);
 
     }
 

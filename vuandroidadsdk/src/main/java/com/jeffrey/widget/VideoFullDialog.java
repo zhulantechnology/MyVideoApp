@@ -2,7 +2,9 @@ package com.jeffrey.widget;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -12,6 +14,8 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.jeffrey.adutil.Utils;
+import com.jeffrey.constant.SDKConstant;
 import com.jeffrey.core.video.VideoAdSlot;
 import com.jeffrey.core.video.VideoAdSlot.AdSDKSlotListener;
 import com.jeffrey.module.AdValue;
@@ -68,7 +72,7 @@ public class VideoFullDialog extends Dialog implements ADVideoPlayerListener {
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                onClickBackBtn();
             }
         });
         mRootView = (RelativeLayout) findViewById(R.id.root_view);
@@ -87,8 +91,8 @@ public class VideoFullDialog extends Dialog implements ADVideoPlayerListener {
             @Override
             public boolean onPreDraw() {
                 mParentView.getViewTreeObserver().removeOnPreDrawListener(this);
-                //prepareScene();
-                //runEnterAnimation();
+                prepareScene();
+                runEnterAnimation();
                 return true;
             }
         });
@@ -156,24 +160,70 @@ public class VideoFullDialog extends Dialog implements ADVideoPlayerListener {
                 }).start();
     }
 
+    // 准备动画所需数据
+    private void prepareScene() {
+        mEndBundle = Utils.getViewProperty(mVideoView);
+        // 将destationView移到originalView位置处
+        deltaY = (mStartBundle.getInt(Utils.PROPNAME_SCREENLOCATION_TOP) -
+                    mEndBundle.getInt(Utils.PROPNAME_SCREENLOCATION_TOP));
+        mVideoView.setTranslationY(deltaY);
+    }
+
+    public void setViewBundle(Bundle bundle) {
+        mStartBundle = bundle;
+    }
+    public void setListener(FullToSmallListener listener) {
+        this.mListener = listener;
+    }
+
     @Override
     public void onBufferUpdate(int time) {
-
+        try {
+            if (mXAdInstance != null) {
+              //  ReportManager.suReport(mXAdInstance.middleMonitor, time / SDKConstant.MILLION_UNIT);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onClickFullScreenBtn() {
-
+        onClickVideo();
     }
 
     @Override
     public void onClickVideo() {
-
+    /*    String desationUrl = mXAdInstance.clickUrl;
+        if (mSlotListener != null) {
+            if (mVideoView.isFrameHidden() && !TextUtils.isEmpty(desationUrl)) {
+                mSlotListener.onClickVideo(desationUrl);
+                try {
+                    ReportManager.pauseVideoReport(mXAdInstance.clickMonitor, mVideoView.getCurrentPosition()
+                            / SDKConstant.MILLION_UNIT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            //走默认样式
+            if (mVideoView.isFrameHidden() && !TextUtils.isEmpty(desationUrl)) {
+                Intent intent = new Intent(mContext, AdBrowserActivity.class);
+                intent.putExtra(AdBrowserActivity.KEY_URL, mXAdInstance.clickUrl);
+                mContext.startActivity(intent);
+                try {
+                    ReportManager.pauseVideoReport(mXAdInstance.clickMonitor, mVideoView.getCurrentPosition()
+                            / SDKConstant.MILLION_UNIT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }*/
     }
 
     @Override
     public void onClickBackBtn() {
-
+        runExitAnimator();
     }
 
     @Override
@@ -183,7 +233,9 @@ public class VideoFullDialog extends Dialog implements ADVideoPlayerListener {
 
     @Override
     public void onAdVideoLoadSuccess() {
-
+        if (mVideoView != null) {
+            mVideoView.resume();
+        }
     }
 
     @Override
@@ -191,8 +243,58 @@ public class VideoFullDialog extends Dialog implements ADVideoPlayerListener {
 
     }
 
+    // 不是加载结束，而是播放结束
     @Override
     public void onAdVideoLoadComplete() {
+        try{
+            int position = mVideoView.getDuration() / SDKConstant.MILLION_UNIT;
+           // ReportManager.sueReport(mXAdInstance.endMonitor, true, position);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        dismiss();
+        if (mListener != null) {
+            mListener.playComplete();
+        }
+    }
 
+    public void setSlotListener(AdSDKSlotListener slotListener) {
+        this.mSlotListener = slotListener;
+    }
+
+    // 与业务逻辑层（VideoAdSlot) 进行通信
+    public interface FullToSmallListener {
+        void getCurrentPlayPosition(int position); //全屏播放中点击关闭按钮或back键时回调
+        void playComplete();    // 全屏播放结束时回调
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

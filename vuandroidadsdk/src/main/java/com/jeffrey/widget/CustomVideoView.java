@@ -141,10 +141,10 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
         mMiniPlayBtn.setOnClickListener(this);
         mFullBtn.setOnClickListener(this);
     }
-
     public void setListener(ADVideoPlayerListener listener) {
         this.listener = listener;
     }
+
 
     private void startPlayView() {
         mLoadingBar.clearAnimation();
@@ -155,7 +155,21 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
 
     @Override
     public void onClick(View v) {
-
+        if (v == this.mMiniPlayBtn) {
+            if (this.playerState == STATE_PAUSING) {
+                if (Utils.getVisiblePercent(mParentContainer)
+                        > SDKConstant.VIDEO_SCREEN_PERCENT) {
+                    resume();
+                    this.listener.onClickPlay();
+                }
+            } else {
+                load();
+            }
+        } else if (v ==this.mFullBtn) {
+            this.listener.onClickFullScreenBtn();
+        } else if (v == mVideoView){
+            this.listener.onClickVideo();
+        }
     }
 
     @Override
@@ -165,6 +179,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
 
     @Override
     public void onCompletion(MediaPlayer mp) {
+        Log.e("XXX", "customVideoView----onCompleteion");
         if (listener != null) {
             listener.onAdVideoLoadComplete();
         }
@@ -175,7 +190,14 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
 
     // 播放完毕后回到初始状态
     public void playBack() {
-
+        setCurrentPlayState(STATE_PAUSING);
+        mHandler.removeCallbacksAndMessages(null);
+        if (mediaPlayer != null) {
+            mediaPlayer.setOnSeekCompleteListener(null);
+            mediaPlayer.seekTo(0);
+            mediaPlayer.pause();
+        }
+        this.showPauseView(false);
     }
 
     @Override
@@ -239,7 +261,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
         }
         if (!isPlaying()) {
             entryResumeState(); //置为播放中的状态值
-            mediaPlayer.setOnCompletionListener(null);
+            mediaPlayer.setOnSeekCompleteListener(null);
             mediaPlayer.start();
             Log.e("XXX", "CustomVideoView----resume--start");
             mHandler.sendEmptyMessage(TIME_MSG);
@@ -377,7 +399,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
 
     private void showLoadingView() {
         mFullBtn.setVisibility(View.GONE);
-        mLoadingBar.setVisibility(View.GONE);
+        mLoadingBar.setVisibility(View.VISIBLE);
         AnimationDrawable anim = (AnimationDrawable) mLoadingBar.getBackground();
         anim.start();
         mMiniPlayBtn.setVisibility(View.GONE);
@@ -569,6 +591,21 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
             });
             
         }
+    }
+
+    //全屏不显示暂停状态,后续可以整合，不必单独出一个方法
+    public void pauseForFullScreen() {
+        if (playerState != STATE_PLAYING) {
+            return;
+        }
+        setCurrentPlayState(STATE_PAUSING);
+        if (isPlaying()) {
+            mediaPlayer.pause();
+            if (!this.canPlay) {
+                mediaPlayer.seekTo(0);
+            }
+        }
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     public void isShowFullBtn(boolean isShow) {

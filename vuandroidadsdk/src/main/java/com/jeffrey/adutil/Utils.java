@@ -12,7 +12,9 @@ import android.Manifest.permission;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 
@@ -84,6 +86,26 @@ public class Utils {
         }
 
         return -1;
+    }
+
+    // 获取View的屏幕属性
+    public static final String PROPNAME_SCREENLOCATION_LEFT = "propname_screenlocation_left";
+    public static final String PROPNAME_SCREENLOCATION_TOP = "proname_screenlocation_top";
+    public static final String PROPNAME_WIDTH = "propname_width";
+    public static final String PROPNAME_HEIGHT = "propname_height";
+
+    public static Bundle getViewProperty(View view) {
+        Bundle bundle = new Bundle();
+        int[] screenLocation = new int[2];
+        view.getLocationOnScreen(screenLocation);
+        bundle.putInt(PROPNAME_SCREENLOCATION_LEFT, screenLocation[0]);
+        bundle.putInt(PROPNAME_SCREENLOCATION_TOP,screenLocation[1]);
+        bundle.putInt(PROPNAME_HEIGHT, view.getWidth());
+        bundle.putInt(PROPNAME_HEIGHT, view.getHeight());
+        Log.e("XXX", "Left: " + screenLocation[0] + " Top: " + screenLocation[1]
+                + " Width: " + view.getWidth() + " Height: " + view.getHeight());
+
+        return bundle;
     }
 
 }
