@@ -2,8 +2,12 @@ package com.jeffrey.view.fragment.home;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.wifi.aware.PublishConfig;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +16,13 @@ import android.widget.TextView;
 
 import com.jeffrey.activity.R;
 import com.jeffrey.activity.SettingActivity;
+import com.jeffrey.constant.Constant;
+import com.jeffrey.network.http.RequestCenter;
+import com.jeffrey.okhttp.listener.DisposeDataListener;
+import com.jeffrey.service.update.UpdateService;
+import com.jeffrey.update.UpdateModel;
+import com.jeffrey.util.Util;
+import com.jeffrey.view.CommonDialog;
 import com.jeffrey.view.fragment.BaseFragment;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -85,6 +96,94 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.video_setting_view:
                 mContext.startActivity(new Intent(mContext, SettingActivity.class));
                 break;
+            case R.id.update_view:
+                    if (hasPermission(Constant.WRITE_READ_EXTERNAL_PERMISSION)) {
+                        checkVersion();
+                    } else {
+                        requestPermission(Constant.WRITE_READ_EXTERNAL_CODE,
+                                                Constant.WRITE_READ_EXTERNAL_PERMISSION);
+                    }
+                break;
         }
     }
+
+    // 申请指定的权限
+    public void requestPermission(int code, String... permissions) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            requestPermissions(permissions, code);
+        }
+    }
+
+    // 发送版本检查更新请求
+    private void checkVersion() {
+        RequestCenter.checkVersion(new DisposeDataListener(){
+            @Override
+            public void onSuccess(Object responseObj) {
+                final UpdateModel updateModel = (UpdateModel) responseObj;
+                if (Util.getVersionCode(mContext) < updateModel.data.currentVersion) {
+                    CommonDialog dialog = new CommonDialog(mContext, "您有新版本",
+                            "快下载更新体验一把", "安装",
+                            "取消", new CommonDialog.DialogClickListener() {
+
+                        @Override
+                        public void onDialogClick() {
+                            Intent intent = new Intent(mContext, UpdateService.class);
+                            mContext.startService(intent);
+                        }
+                    });
+                    dialog.show();
+                } else {
+                    // 弹出一个Toast提示当前已经是最新版本
+                }
+            }
+
+            @Override
+            public void onFailure(Object reasonObj) {
+
+            }
+        });
+    }
+
+
+
+    public boolean hasPermission(String... permissions) {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission)
+                        != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

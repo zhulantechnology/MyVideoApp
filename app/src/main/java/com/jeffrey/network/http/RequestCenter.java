@@ -6,6 +6,7 @@ import com.jeffrey.okhttp.listener.DisposeDataHandle;
 import com.jeffrey.okhttp.listener.DisposeDataListener;
 import com.jeffrey.okhttp.request.CommonRequest;
 import com.jeffrey.okhttp.request.RequestParams;
+import com.jeffrey.update.UpdateModel;
 
 /**
  * @function 存放应用中所有的请求
@@ -29,4 +30,27 @@ public class RequestCenter {
         RequestCenter.postRequest(HttpConstants.HOME_RECOMMAND, null,
                 listener, BaseRecommandModel.class);
     }
+
+    //应用版本号请求
+    public static void checkVersion(DisposeDataListener listener) {
+        RequestCenter.postRequest(HttpConstants.CHECK_UPDATE, null, listener, UpdateModel.class);
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
