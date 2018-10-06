@@ -12,7 +12,9 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.FileProvider;
 import android.util.AndroidException;
+import android.util.Log;
 
 import com.jeffrey.activity.R;
 
@@ -58,21 +60,23 @@ public class UpdateService extends Service {
         UpdateManager.getInstance().startDownload(apkUrl, filePath, new UpdateDownloadListener() {
             @Override
             public void onStarted() {
-
+                Log.e("XXX", "startDownload------onStarted");
             }
 
             @Override
             public void onPrepared(long contentLength, String downloadUrl) {
-
+                Log.e("XXX", "startDownload------onPrepared");
             }
 
             @Override
             public void onProgressChanged(int progress, String downloadUrl) {
+               // Log.e("XXX", "startDownload------onProgressChanged");
                 notifyUser("正在下载", "正在下载", progress);
             }
 
             @Override
             public void onPaused(int progress, int completeSize, String downloadUrl) {
+                Log.e("XXX", "startDownload------onPaused");
                 notifyUser("下载失败",
                         "下载失败，请检查网络连接和SD卡存储空间", 0);
                 deleteApkFile();
@@ -81,6 +85,7 @@ public class UpdateService extends Service {
 
             @Override
             public void onFinished(int completeSize, String downloadUrl) {
+                Log.e("XXX", "startDownload------onFinished");
                 notifyUser("下载完成", "下载完成",100);
                 stopSelf(); // 停掉服务自身
                 startActivity(getInstallApkIntent());
@@ -89,6 +94,7 @@ public class UpdateService extends Service {
 
             @Override
             public void onFailure() {
+                Log.e("XXX", "startDownload------onFailure");
                 notifyUser("下载失败", "下载失败，请检查网络连接或SD卡存储空间", 0);
                 deleteApkFile();
                 stopSelf();
@@ -130,10 +136,17 @@ public class UpdateService extends Service {
     // 下载完成，安装
     private Intent getInstallApkIntent() {
         File apkfile = new File(filePath);
+       // Uri apkURI = Uri.fromFile(apkfile);
+
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndType(Uri.parse("file://" + apkfile.toString()),
-                                "application/vnd.android.package-archive");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        Uri apkURI = FileProvider.getUriForFile(this,
+                getApplicationContext().getPackageName() + ".provider", apkfile);
+      //  intent.setDataAndType(Uri.parse("file://" + apkfile.toString()),
+       //                         "application/vnd.android.package-archive");
+        intent.setDataAndType(apkURI, "application/vnd.android.package-archive");
         return intent;
     }
 
