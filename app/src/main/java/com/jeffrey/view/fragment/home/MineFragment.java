@@ -1,22 +1,30 @@
 package com.jeffrey.view.fragment.home;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.wifi.aware.PublishConfig;
 import android.os.Build;
 import android.os.Bundle;
+import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jeffrey.activity.LoginActivity;
 import com.jeffrey.activity.R;
 import com.jeffrey.activity.SettingActivity;
+import com.jeffrey.adutil.ImageLoaderUtil;
 import com.jeffrey.constant.Constant;
+import com.jeffrey.manager.UserManager;
+import com.jeffrey.module.user.User;
 import com.jeffrey.network.http.RequestCenter;
 import com.jeffrey.okhttp.listener.DisposeDataListener;
 import com.jeffrey.service.update.UpdateService;
@@ -51,10 +59,31 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private TextView mQrCodeView;
     private TextView mUpdateView;
 
+    //自定义一个广播接收器
+    private LoginBroadcastReceiver receiver = new LoginBroadcastReceiver();
+
+    private class LoginBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (UserManager.getInstance().hasLogined()) {
+                //更新Fragment
+                if(mLoginedLayout.getVisibility() == View.GONE) {
+                    mLoginLayout.setVisibility(View.GONE);
+                    mLoginedLayout.setVisibility(View.VISIBLE);
+                    mUserNameView.setText(UserManager.getInstance().getUser().data.name);
+                    mTickView.setText(UserManager.getInstance().getUser().data.tick);
+                    ImageLoaderUtil.getInstance(mContext).displayImage(mPhotoView,
+                            UserManager.getInstance().getUser().data.photoUrl);
+                }
+            }
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
+        registerBroadcast();
 
     }
 
@@ -104,7 +133,19 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                                                 Constant.WRITE_READ_EXTERNAL_PERMISSION);
                     }
                 break;
+            case R.id.login_layout:
+            case R.id.login_view:
+                // 未登录，则跳转到登录页面
+                if (!UserManager.getInstance().hasLogined()) {
+                    toLogin();
+                }
         }
+    }
+
+    // 去登录页面
+    private void toLogin() {
+        Intent intent = new Intent(mContext, LoginActivity.class);
+        mContext.startActivity(intent);
     }
 
     // 申请指定的权限
@@ -154,6 +195,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             }
         }
         return true;
+    }
+
+    private void registerBroadcast() {
+        IntentFilter filter = new IntentFilter(LoginActivity.LOGIN_ACTION);
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, filter);
+    }
+
+    private void unregisterBroadcast() {
+        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
     }
 }
 

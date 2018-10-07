@@ -1,6 +1,7 @@
 package com.jeffrey.network.http;
 
 import com.jeffrey.module.recommand.BaseRecommandModel;
+import com.jeffrey.module.user.User;
 import com.jeffrey.okhttp.CommonOkHttpClient;
 import com.jeffrey.okhttp.listener.DisposeDataHandle;
 import com.jeffrey.okhttp.listener.DisposeDataListener;
@@ -34,6 +35,14 @@ public class RequestCenter {
     //应用版本号请求
     public static void checkVersion(DisposeDataListener listener) {
         RequestCenter.postRequest(HttpConstants.CHECK_UPDATE, null, listener, UpdateModel.class);
+    }
+
+    // 用户登录请求
+    public static void login(String userName, String passwd, DisposeDataListener listener) {
+        RequestParams params = new RequestParams();
+        params.put("mb", userName);
+        params.put("pwd", passwd);
+        RequestCenter.postRequest(HttpConstants.LOGIN, params, listener, User.class);
     }
 
 }
