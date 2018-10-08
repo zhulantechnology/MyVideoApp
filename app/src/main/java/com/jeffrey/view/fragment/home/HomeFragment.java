@@ -1,6 +1,7 @@
 package com.jeffrey.view.fragment.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,9 +15,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jeffrey.activity.PhotoViewActivity;
 import com.jeffrey.activity.R;
 import com.jeffrey.adapter.CourseAdapter;
 import com.jeffrey.module.recommand.BaseRecommandModel;
+import com.jeffrey.module.recommand.RecommandBodyValue;
 import com.jeffrey.network.http.RequestCenter;
 import com.jeffrey.okhttp.listener.DisposeDataListener;
 import com.jeffrey.view.fragment.BaseFragment;
@@ -139,6 +142,37 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        RecommandBodyValue value = (RecommandBodyValue) mAdapter.getItem(
+                            position - mListView.getHeaderViewsCount());
+        if (value.type != 0) {
+            Intent intent = new Intent(mContext, PhotoViewActivity.class);
+            intent.putStringArrayListExtra(PhotoViewActivity.PHOTO_LIST, value.url);
+            startActivity(intent);
+        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

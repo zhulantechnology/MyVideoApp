@@ -45,6 +45,8 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"
             />
+        <activity android:name=".PhotoViewActivity"
+            android:screenOrientation="portrait"/>
 
         <service android:name="com.jeffrey.service.update.UpdateService" />
 
