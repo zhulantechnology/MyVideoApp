@@ -31,6 +31,7 @@ import com.jeffrey.service.update.UpdateService;
 import com.jeffrey.update.UpdateModel;
 import com.jeffrey.util.Util;
 import com.jeffrey.view.CommonDialog;
+import com.jeffrey.view.MyQrCodeDialog;
 import com.jeffrey.view.fragment.BaseFragment;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -139,6 +140,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 if (!UserManager.getInstance().hasLogined()) {
                     toLogin();
                 }
+                break;
+            case R.id.my_qrcode_view:
+                if (!UserManager.getInstance().hasLogined()) {
+                    // 未登陆，去登陆
+                    toLogin();
+                } else {
+                    // 已登陆根据用户ID生成二维码显示
+                    MyQrCodeDialog dialog = new MyQrCodeDialog(mContext);
+                    dialog.show();
+                }
+                break;
         }
     }
 
