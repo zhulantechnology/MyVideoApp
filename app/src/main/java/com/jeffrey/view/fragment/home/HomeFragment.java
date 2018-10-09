@@ -92,6 +92,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
             // 创建Adapter
             mAdapter = new CourseAdapter(mContext, mRecommandData.data.list);
             mListView.setAdapter(mAdapter);
+            mListView.setOnItemClickListener(this);
             mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -144,10 +145,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         RecommandBodyValue value = (RecommandBodyValue) mAdapter.getItem(
                             position - mListView.getHeaderViewsCount());
+        Log.e("XXX", "onItemClick------position:" + position);
         if (value.type != 0) {
-            Intent intent = new Intent(mContext, PhotoViewActivity.class);
+/*            Intent intent = new Intent(mContext, PhotoViewActivity.class);
+            Log.e("XXX", "onItemClick------value.url:" + value.url);
             intent.putStringArrayListExtra(PhotoViewActivity.PHOTO_LIST, value.url);
-            startActivity(intent);
+            startActivity(intent);*/
         }
     }
 }

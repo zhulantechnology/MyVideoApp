@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.jeffrey.activity.PhotoViewActivity;
 import com.jeffrey.activity.R;
 import com.jeffrey.adutil.Utils;
 import com.jeffrey.core.video.VideoAdContext;
@@ -187,9 +188,10 @@ public class CourseAdapter extends BaseAdapter {
                 mViewHolder.mProductLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        /*Intent intent = new Intent(mContext, PhotoViewActivity.class);
+                        Intent intent = new Intent(mContext, PhotoViewActivity.class);
+                        Log.e("XXX", "CARD_MULTI_PIC------value.url:" + value.url);
                         intent.putStringArrayListExtra(PhotoViewActivity.PHOTO_LIST, value.url);
-                        mContext.startActivity(intent);*/
+                        mContext.startActivity(intent);
                     }
                 });
                 mViewHolder.mProductLayout.removeAllViews();
