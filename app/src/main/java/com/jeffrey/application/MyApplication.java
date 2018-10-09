@@ -22,6 +22,10 @@ public class MyApplication extends Application {
         AdSDKManager.init(this);
     }
 
+    private void initShareSDK() {
+        ShareManager.initSDK(this);
+    }
+
     public static MyApplication getInstance() {
         return mApplication;
     }
