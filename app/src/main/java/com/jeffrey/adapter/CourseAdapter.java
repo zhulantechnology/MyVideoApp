@@ -19,11 +19,13 @@ import com.jeffrey.activity.R;
 import com.jeffrey.adutil.Utils;
 import com.jeffrey.core.video.VideoAdContext;
 import com.jeffrey.module.recommand.RecommandBodyValue;
+import com.jeffrey.share.ShareDialog;
 import com.jeffrey.util.ImageLoaderManager;
 import com.jeffrey.util.Util;
 
 import java.util.ArrayList;
 
+import cn.sharesdk.framework.Platform;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -174,6 +176,24 @@ public class CourseAdapter extends BaseAdapter {
         switch (type) {
             case VIDOE_TYPE:
                 //Log.e("XXX", "wangjun----VIDOE_TYPE-0----:");
+                mImagerLoader.displayImage(mViewHolder.mLogoView, value.logo);
+                mViewHolder.mTitleView.setText(value.title);
+                mViewHolder.mInfoView.setText(value.info.concat(mContext.getString(R.string.tian_qian)));
+                mViewHolder.mFooterView.setText(value.text);
+                mViewHolder.mShareView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ShareDialog dialog = new ShareDialog(mContext, false);
+                        dialog.setShareType(Platform.SHARE_VIDEO);
+                        dialog.setShareTitle(value.title);
+                        dialog.setShareTitleUrl(value.site);
+                        dialog.setShareText(value.text);
+                        dialog.setShareSite(value.title);
+                        dialog.setShareTitle(value.site);
+                        dialog.setUrl(value.resource);
+                        dialog.show();
+                    }
+                });
                 break;
             case CARD_MULTI_PIC:
                 // 为ImageView完成图片的加载

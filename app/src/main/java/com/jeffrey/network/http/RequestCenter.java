@@ -5,6 +5,7 @@ import com.jeffrey.module.user.User;
 import com.jeffrey.okhttp.CommonOkHttpClient;
 import com.jeffrey.okhttp.listener.DisposeDataHandle;
 import com.jeffrey.okhttp.listener.DisposeDataListener;
+import com.jeffrey.okhttp.listener.DisposeDownloadListener;
 import com.jeffrey.okhttp.request.CommonRequest;
 import com.jeffrey.okhttp.request.RequestParams;
 import com.jeffrey.update.UpdateModel;
@@ -43,6 +44,11 @@ public class RequestCenter {
         params.put("mb", userName);
         params.put("pwd", passwd);
         RequestCenter.postRequest(HttpConstants.LOGIN, params, listener, User.class);
+    }
+
+    public static void downloadFile(String url, String path, DisposeDownloadListener listener) {
+        CommonOkHttpClient.downloadFile(CommonRequest.createGetRequest(url, null),
+                new DisposeDataHandle(listener, path));
     }
 
 }

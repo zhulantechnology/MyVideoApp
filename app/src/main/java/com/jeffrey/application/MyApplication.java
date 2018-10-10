@@ -3,6 +3,7 @@ package com.jeffrey.application;
 import android.app.Application;
 
 import com.jeffrey.core.AdSDKManager;
+import com.jeffrey.share.ShareManager;
 
 /**
  * Created by Jun.wang on 2018/5/27.
@@ -16,6 +17,7 @@ public class MyApplication extends Application {
         super.onCreate();
         mApplication = this;
         initAdSDK();
+        initShareSDK();
     }
 
     private void initAdSDK() {
