@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jeffrey.activity.base.BaseActivity;
+import com.jeffrey.adapter.CourseCommentAdapter;
 import com.jeffrey.module.course.BaseCourseModel;
 import com.jeffrey.network.http.RequestCenter;
 import com.jeffrey.okhttp.listener.DisposeDataHandle;
@@ -31,6 +32,8 @@ public class CourseDetailActivity extends BaseActivity implements View.OnClickLi
     private String mCourseID;
     private BaseCourseModel mData;
     private String tempHint = "";
+
+    private CourseCommentAdapter mAdapter;
 
     //UI
     private ImageView mBackView;
