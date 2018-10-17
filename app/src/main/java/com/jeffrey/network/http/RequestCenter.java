@@ -1,5 +1,6 @@
 package com.jeffrey.network.http;
 
+import com.jeffrey.module.course.BaseCourseModel;
 import com.jeffrey.module.recommand.BaseRecommandModel;
 import com.jeffrey.module.user.User;
 import com.jeffrey.okhttp.CommonOkHttpClient;
@@ -49,6 +50,14 @@ public class RequestCenter {
     public static void downloadFile(String url, String path, DisposeDownloadListener listener) {
         CommonOkHttpClient.downloadFile(CommonRequest.createGetRequest(url, null),
                 new DisposeDataHandle(listener, path));
+    }
+
+    // 请求课程详情
+    public static void requestCourseDetail(String courseId, DisposeDataListener listener) {
+        RequestParams params = new RequestParams();
+        params.put("courseId", courseId);
+        RequestCenter.postRequest(HttpConstants.COURSE_DETAIL,
+                        params, listener, BaseCourseModel.class);
     }
 
 }
