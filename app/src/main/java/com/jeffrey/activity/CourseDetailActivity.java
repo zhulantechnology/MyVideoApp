@@ -20,6 +20,8 @@ import com.jeffrey.network.http.RequestCenter;
 import com.jeffrey.okhttp.listener.DisposeDataHandle;
 import com.jeffrey.okhttp.listener.DisposeDataListener;
 import com.jeffrey.util.Util;
+import com.jeffrey.view.course.CourseDetailFooterView;
+import com.jeffrey.view.course.CourseDetailHeaderView;
 
 /**
  * 课程详情界面，需要用SingleTop模式
@@ -43,6 +45,9 @@ public class CourseDetailActivity extends BaseActivity implements View.OnClickLi
     private ImageView mJianPanView;
     private EditText mInputEditView;
     private TextView mSendView;
+
+    private CourseDetailHeaderView headerView;
+    private CourseDetailFooterView footerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

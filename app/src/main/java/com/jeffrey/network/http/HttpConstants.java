@@ -13,7 +13,7 @@ public class HttpConstants {
     public static String PRODUCT_LATESAT_UPDATE = ROOT_URL + "/MyVideoAppServer/Data/upsearch.php";
     public static String LOGIN = ROOT_URL + "/MyVideoAppServer/Data/user_info.json";
     public static String CHECK_UPDATE = ROOT_URL + "/MyVideoAppServer/Data/update.json";
-    public static String COURSE_DETAIL = ROOT_URL + "/MyVideoAppServer/Data/course_detail.php";
+    public static String COURSE_DETAIL = ROOT_URL + "/MyVideoAppServer/Data/course_detail.json";
 
 //    private static final String ROOT_URL = "http://imooc.com/api";
 //    /**

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.jeffrey.activity.CourseDetailActivity;
 import com.jeffrey.activity.R;
 import com.jeffrey.module.recommand.RecommandBodyValue;
 import com.jeffrey.util.ImageLoaderManager;
@@ -65,9 +66,9 @@ public class HotSalePagerAdapter extends PagerAdapter {
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*                Intent intent = new Intent(mContext, CourseDetailActivity.class);
+                Intent intent = new Intent(mContext, CourseDetailActivity.class);
                 intent.putExtra(CourseDetailActivity.COURSE_ID, value.adid);
-                mContext.startActivity(intent);*/
+                mContext.startActivity(intent);
             }
         });
 

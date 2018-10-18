@@ -59,6 +59,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
+        <activity android:name=".CourseDetailActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <!-- shareSDK -->
         <activity
             android:name="com.mob.tools.MobUIShell"

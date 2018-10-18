@@ -25,6 +25,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     testCompile 'junit:junit:4.12'
     compile project(':vuandroidadsdk')
     compile 'de.hdodenhof:circleimageview:2.1.0'
@@ -38,4 +39,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile files('libs/zxing.jar')
     compile files('libs/MobCommons-2016.0811.1207.jar')
+    compile files('libs/mpchart.jar')
 }
