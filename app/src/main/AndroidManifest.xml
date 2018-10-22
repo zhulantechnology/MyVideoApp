@@ -126,6 +126,9 @@
             android:value="@integer/google_play_services_version" />
 
         <!-- JPush begin -->
+        <!-- 推送模块自定义部分 -->
+        <activity android:name="com.jeffrey.jpush.PushMessageActivity" />
+
         <!-- Rich push 核心功能 since 2.0.6-->
         <activity
             android:name="cn.jpush.android.ui.PopWinActivity"
@@ -213,7 +216,7 @@
         <!-- User defined.  For test only  用户自定义的广播接收器-->
 
         <receiver
-            android:name=".jpush.JPushReceiver"
+            android:name="com.jeffrey.jpush.JPushReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -225,7 +228,7 @@
                 <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" />
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
 
-                <category android:name="com.youdu" />
+                <category android:name="com.jeffrey.activity" />
             </intent-filter>
         </receiver>
 

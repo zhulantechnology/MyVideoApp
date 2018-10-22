@@ -5,6 +5,8 @@ import android.app.Application;
 import com.jeffrey.core.AdSDKManager;
 import com.jeffrey.share.ShareManager;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  * Created by Jun.wang on 2018/5/27.
  */
@@ -17,7 +19,13 @@ public class MyApplication extends Application {
         super.onCreate();
         mApplication = this;
         initAdSDK();
+        initJPush();
         initShareSDK();
+    }
+
+    private void initJPush() {
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
     }
 
     private void initAdSDK() {
