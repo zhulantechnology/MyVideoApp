@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.jeffrey.activity.PhotoViewActivity;
 import com.jeffrey.activity.R;
 import com.jeffrey.adapter.CourseAdapter;
+import com.jeffrey.constant.Constant;
 import com.jeffrey.module.recommand.BaseRecommandModel;
 import com.jeffrey.module.recommand.RecommandBodyValue;
 import com.jeffrey.network.http.RequestCenter;
@@ -138,7 +139,21 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.qrcode_view:
+                if (hasPermission(Constant.HARDWEAR_CAMERA_PERMISSION)) {
+                    doOpenCamera();
+                } else {
+                    requestPermission(Constant.HARDWEAR_CAMERA_CODE, Constant.HARDWEAR_CAMERA_PERMISSION);
+                }
+                break;
+        }
+    }
 
+    @Override
+    public void doOpenCamera() {
+      //  Intent intent = new Intent(mContext, CaptureActivity.class);
+      //  startActivityForResult(intent, REQUEST_QRCODE);
     }
 
     @Override
