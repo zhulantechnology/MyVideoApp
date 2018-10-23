@@ -238,6 +238,16 @@
 
         <!-- JPush end -->
 
+        <!-- 友盟统计相关meta-data -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="57bfe3cbe0f55a0b2e0025b8" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}" />
+
+        <!-- UMeng end-->
+
     </application>
 
 </manifest>

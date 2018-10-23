@@ -10,11 +10,60 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "imooc"]  // 默认的渠道值
     }
+
+    signingConfigs {
+        debug {}
+        release {
+            storeFile file("videoapp.jks")
+            storePassword "123456"
+            keyAlias "jeffrey"
+            keyPassword "123456"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            // 指定我们release包的输出文件名就是我们的渠道名字
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith(".apk")) {
+                        def fileName = "${variant.productFlavors[0].name}" + ".apk"
+                        output.outputFile = new File(outputFile.parent, fileName);
+
+                    }
+                }
+
+            }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+        lintConfig file("lint.xml")
+    }
+
+    //使AS知道，so文件的位置
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    //真正的多渠道脚本支持
+    productFlavors {
+        googleplayer {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "googleplayer"]
+        }
+        productFlavors.all {
+            flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
         }
     }
 }
@@ -40,4 +89,6 @@ dependencies {
     compile files('libs/zxing.jar')
     compile files('libs/MobCommons-2016.0811.1207.jar')
     compile files('libs/mpchart.jar')
+    //添加友盟统计
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }
