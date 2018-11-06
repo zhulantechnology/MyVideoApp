@@ -15,9 +15,8 @@ import com.jeffrey.module.recommand.RecommandFooterValue;
 
 
 /**
- * @author: vision
- * @function:
- * @date: 16/9/2
+ * @author: Jun.wang 2018-08-08
+ * @function:   ListView的底部
  */
 public class HomeBottomItem extends RelativeLayout {
 

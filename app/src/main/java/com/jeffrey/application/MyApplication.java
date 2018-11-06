@@ -9,6 +9,9 @@ import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by Jun.wang on 2018/5/27.
+ * 1. 整个程序的入口
+ * 2. 做很多初始化工作
+ * 3. 为整个应用的其它模块提供一个上下文环境
  */
 
 public class MyApplication extends Application {

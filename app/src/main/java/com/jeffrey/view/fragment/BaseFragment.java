@@ -9,6 +9,7 @@ import com.jeffrey.constant.Constant;
 
 /**
  * Created by Jun.wang on 2018/5/27.
+ * 为所有的Fragment提供一些公共的行为或事件
  */
 
 public class BaseFragment extends Fragment {

@@ -8,9 +8,10 @@ import android.view.WindowManager;
 
 /**
  * Created by Jun.wang on 2018/5/27.
+ * 为所有的Activity提供公共的行为
  */
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     public String TAG;
 
