@@ -27,7 +27,6 @@ public class RealmManager {
     //负责初始化整个Relam数据库
     public static void init(Context context) {
         Realm.init(context);
-       // Log.e("realm", getRealm().getPath() + "XXX");
     }
 
     //关闭Realm数据库

@@ -179,7 +179,6 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        Log.e("XXX", "customVideoView----onCompleteion");
         if (listener != null) {
             listener.onAdVideoLoadComplete();
         }
@@ -263,7 +262,6 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
             entryResumeState(); //置为播放中的状态值
             mediaPlayer.setOnSeekCompleteListener(null);
             mediaPlayer.start();
-            Log.e("XXX", "CustomVideoView----resume--start");
             mHandler.sendEmptyMessage(TIME_MSG);
             showPauseView(true);
         } else {

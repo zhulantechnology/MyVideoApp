@@ -91,7 +91,6 @@ public class CourseAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         //1. 获取数据的Type类型
         int type = getItemViewType(position);
-        //Log.e("XXX", "wangjun----type-----:" + type);
         final RecommandBodyValue value = (RecommandBodyValue) getItem(position);
 
         //为空表示当前没有可用的缓存View
@@ -131,7 +130,6 @@ public class CourseAdapter extends BaseAdapter {
                     break;
                 case CARD_MULTI_PIC:
                     mViewHolder = new ViewHolder();
-                    //Log.e("XXX", "wangjun----type-----:CARD_MULTI_PIC");
                     convertView = mInflate.inflate(R.layout.item_product_card_one_layout, parent, false);
                     mViewHolder.mLogoView = (CircleImageView) convertView.findViewById(R.id.item_logo_view);
                     mViewHolder.mTitleView = (TextView) convertView.findViewById(R.id.item_title_view);
@@ -175,7 +173,6 @@ public class CourseAdapter extends BaseAdapter {
         //填充item的数据
         switch (type) {
             case VIDOE_TYPE:
-                //Log.e("XXX", "wangjun----VIDOE_TYPE-0----:");
                 mImagerLoader.displayImage(mViewHolder.mLogoView, value.logo);
                 mViewHolder.mTitleView.setText(value.title);
                 mViewHolder.mInfoView.setText(value.info.concat(mContext.getString(R.string.tian_qian)));
@@ -197,7 +194,6 @@ public class CourseAdapter extends BaseAdapter {
                 break;
             case CARD_MULTI_PIC:
                 // 为ImageView完成图片的加载
-                //Log.e("XXX", "wangjun----CARD_MULTI_PIC-1----:" + value.title);
                 mImagerLoader.displayImage(mViewHolder.mLogoView, value.logo);
                 mViewHolder.mTitleView.setText(value.title);
                 mViewHolder.mInfoView.setText(value.info.concat(mContext.getString(R.string.tian_qian)));
@@ -209,7 +205,6 @@ public class CourseAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, PhotoViewActivity.class);
-                        Log.e("XXX", "CARD_MULTI_PIC------value.url:" + value.url);
                         intent.putStringArrayListExtra(PhotoViewActivity.PHOTO_LIST, value.url);
                         mContext.startActivity(intent);
                     }
@@ -221,7 +216,6 @@ public class CourseAdapter extends BaseAdapter {
                 }
                 break;
             case CARD_SINGLE_PIC:
-                //Log.e("XXX", "wangjun----CARD_SINGLE_PIC-2----:" + value.title);
                 mImagerLoader.displayImage(mViewHolder.mLogoView, value.logo);
                 mViewHolder.mTitleView.setText(value.title);
                 mViewHolder.mInfoView.setText(value.info.concat(mContext.getString(R.string.tian_qian)));
@@ -233,7 +227,6 @@ public class CourseAdapter extends BaseAdapter {
                 mImagerLoader.displayImage(mViewHolder.mProductView, value.url.get(0));
                 break;
             case CARD_VIEW_PAGER:
-                //Log.e("XXX", "wangjun----CARD_VIEW_PAGER-3----:");
                 break;
         }
         return convertView;

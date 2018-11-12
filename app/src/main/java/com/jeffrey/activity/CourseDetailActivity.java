@@ -57,7 +57,6 @@ public class CourseDetailActivity extends BaseActivity implements View.OnClickLi
         initData();
         initView();
         requestDetail();
-        Log.e("XXX","onCreate------------------------");
     }
 
     @Override
@@ -67,7 +66,6 @@ public class CourseDetailActivity extends BaseActivity implements View.OnClickLi
         initData();
         initView();
         requestDetail();
-        Log.e("XXX","onNewIntent------------------------");
     }
 
     // 初始化数据

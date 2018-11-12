@@ -82,12 +82,10 @@ public class CommonJsonCallback implements Callback {
     public void onResponse(final Call call, final Response response) throws IOException {
         final String result = response.body().string();
         final ArrayList<String> cookieLists = handleCookie(response.headers());
-        Log.e("XXX", "onResponse-------result---:" + result);
         mDeliveryHandler.post(new Runnable() {
             @Override
             public void run() {
                 handleResponse(result);
-               // Log.e("XXX", "onResponse---run----Thread ID---:" + Thread.currentThread().getId());
                 /**
                  * handle the cookie
                  */
@@ -120,7 +118,6 @@ public class CommonJsonCallback implements Callback {
              * 协议确定后看这里如何修改
              */
             JSONObject result = new JSONObject(responseObj.toString());
-            Log.e("XXX", "handleResponse-------result---:" + result);
             if (result.has(RESULT_CODE)) {
                 // 从json数据中取出响应码，若为0，则为正确响应
                 if (result.getInt(RESULT_CODE) == RESULT_CODE_VALUE) {

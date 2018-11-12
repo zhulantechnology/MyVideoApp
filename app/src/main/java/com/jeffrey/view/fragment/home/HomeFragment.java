@@ -59,7 +59,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestRecommandData();
-        //Log.e("XXX", "---onCreate----Thread ID---:" + Thread.currentThread().getId());
     }
 
     //
@@ -67,7 +66,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
         RequestCenter.requestRecommandData(new DisposeDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
-                Log.e("XXX", "onSuccess-----:" + responseObj.toString());
                 // 完成真正的功能逻辑
                 mRecommandData = (BaseRecommandModel) responseObj;
                 //获得数据之后更新UI
@@ -76,7 +74,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
 
             @Override
             public void onFailure(Object reasonObj) {
-                Log.e("XXX", "failed-----:" + reasonObj.toString());
                 //显示请求失败View
                 //showErrorView();
             }
@@ -160,10 +157,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener,
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         RecommandBodyValue value = (RecommandBodyValue) mAdapter.getItem(
                             position - mListView.getHeaderViewsCount());
-        Log.e("XXX", "onItemClick------position:" + position);
         if (value.type != 0) {
 /*            Intent intent = new Intent(mContext, PhotoViewActivity.class);
-            Log.e("XXX", "onItemClick------value.url:" + value.url);
             intent.putStringArrayListExtra(PhotoViewActivity.PHOTO_LIST, value.url);
             startActivity(intent);*/
         }

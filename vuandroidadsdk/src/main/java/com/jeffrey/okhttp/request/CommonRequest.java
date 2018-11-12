@@ -46,7 +46,6 @@ public class CommonRequest {
                         append(entry.getValue()).append("&");
             }
         }
-        //Log.e("XXX", "urlBuilder ----------:" + urlBuilder);
         return new Request.Builder().url(urlBuilder.substring(0,urlBuilder.length() - 1))
                 .get().build();
     }

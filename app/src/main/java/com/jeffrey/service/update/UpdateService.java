@@ -60,23 +60,19 @@ public class UpdateService extends Service {
         UpdateManager.getInstance().startDownload(apkUrl, filePath, new UpdateDownloadListener() {
             @Override
             public void onStarted() {
-                Log.e("XXX", "startDownload------onStarted");
             }
 
             @Override
             public void onPrepared(long contentLength, String downloadUrl) {
-                Log.e("XXX", "startDownload------onPrepared");
             }
 
             @Override
             public void onProgressChanged(int progress, String downloadUrl) {
-               // Log.e("XXX", "startDownload------onProgressChanged");
                 notifyUser("正在下载", "正在下载", progress);
             }
 
             @Override
             public void onPaused(int progress, int completeSize, String downloadUrl) {
-                Log.e("XXX", "startDownload------onPaused");
                 notifyUser("下载失败",
                         "下载失败，请检查网络连接和SD卡存储空间", 0);
                 deleteApkFile();
@@ -85,7 +81,6 @@ public class UpdateService extends Service {
 
             @Override
             public void onFinished(int completeSize, String downloadUrl) {
-                Log.e("XXX", "startDownload------onFinished");
                 notifyUser("下载完成", "下载完成",100);
                 stopSelf(); // 停掉服务自身
                 startActivity(getInstallApkIntent());
@@ -94,7 +89,6 @@ public class UpdateService extends Service {
 
             @Override
             public void onFailure() {
-                Log.e("XXX", "startDownload------onFailure");
                 notifyUser("下载失败", "下载失败，请检查网络连接或SD卡存储空间", 0);
                 deleteApkFile();
                 stopSelf();

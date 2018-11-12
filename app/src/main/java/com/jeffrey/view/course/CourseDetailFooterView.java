@@ -94,7 +94,6 @@ public class CourseDetailFooterView extends RelativeLayout {
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, CourseDetailActivity.class);
                     intent.putExtra(CourseDetailActivity.COURSE_ID, value.courseId);
-                    Log.e("XXX", "CourseDetailActivity----1111-----value.courseId: " + value.courseId);
                     mContext.startActivity(intent);
                 }
             });

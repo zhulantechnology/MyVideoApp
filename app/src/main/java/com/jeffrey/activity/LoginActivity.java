@@ -54,7 +54,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_button:
-                Log.e("XXX", "login_button------------CLICK");
                 login();
                 break;
         }
@@ -70,7 +69,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 User user = (User) responseObj;
                 UserManager.getInstance().setUser(user);
                 sendLoginBroadcast();
-                Log.e("XXX", "login_button------------FINISH");
                 finish();
             }
 
@@ -83,7 +81,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     // 向整个应用发送登录广播事件
     private void sendLoginBroadcast() {
-        Log.e("XXX", "login_button------------sendLoginBroadcast");
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(LOGIN_ACTION));
     }
 

@@ -162,13 +162,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
             @Override
             public void onFailure(Call call, IOException e) {
 
-                //Log.e("XXX","AsyncRequest call fail------:" + e.toString());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                //Log.e("XXX","AsyncRequest call success------:"+ response.body().toString());
-                //Log.e("XXX","AsyncRequest thread ID-------:"+Thread.currentThread().getId());
             }
         });
     }
@@ -181,12 +178,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                 new CommonJsonCallback(new DisposeDataHandle(new DisposeDataListener() {
                     @Override
                     public void onSuccess(Object responseObj) {
-                       // Log.e("XXX","wangjun---test packing ---success---:"+ responseObj.toString());
                     }
 
                     @Override
                     public void onFailure(Object reasonObj) {
-                        //Log.e("XXX","wangjun---test packing ---failure---:"+reasonObj.toString());
                     }
                 })));
     }
