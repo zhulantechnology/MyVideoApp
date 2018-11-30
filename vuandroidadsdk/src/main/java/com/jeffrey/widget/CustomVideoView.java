@@ -46,13 +46,13 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
 
     // Constant
     private static final String TAG = "MraidVideoView";
-    private static final int TIME_MSG = 0X01;
-    private static final int TIME_INVAL = 1000;
-    private static final int STATE_ERROR = -1;
+    private static final int TIME_MSG = 0X01;   // 更新播放时间的消息
+    private static final int TIME_INVAL = 1000;   // 更新播放时间的消息间隔
+    private static final int STATE_ERROR = -1;   // 以下是播放的4中状态
     private static final int STATE_IDLE = 0;
     private static final int STATE_PLAYING= 1;
     private static final int STATE_PAUSING= 2;
-    private static final int LOAD_TOTAL_COUNT= 3;
+    private static final int LOAD_TOTAL_COUNT= 3;    // load的次数
 
 
     // Status 状态保护
@@ -64,13 +64,13 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
 
 
     // UI
-    private ViewGroup mParentContainer;
-    private RelativeLayout mPlayerView;
-    private TextureView mVideoView;
-    private Button mMiniPlayBtn;
-    private ImageView mFullBtn;
-    private ImageView mLoadingBar;
-    private ImageView mFrameView;
+    private ViewGroup mParentContainer;   // 这个播放器View的父容器
+    private RelativeLayout mPlayerView;   // 播放器View的Layout文件，包括播放器和一些Icon
+    private TextureView mVideoView;  // 播放视频的View
+    private Button mMiniPlayBtn;   // 播放View
+    private ImageView mFullBtn;    // 全屏View
+    private ImageView mLoadingBar;   // 加载动画
+    private ImageView mFrameView;   // 停止播放的View
     private AudioManager audioManager;
 
 
@@ -81,9 +81,9 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
     private int mScreenWidth, mDestationHeight;
 
     private MediaPlayer mediaPlayer;
-    private ADVideoPlayerListener listener;
-    private ADFrameImageLoadListener mFrameLoadListener;
-    private ScreenEventReceiver mScreenReceiver;
+    private ADVideoPlayerListener listener;   // 视频播放器的监听器，比如全屏，暂停，开始播放，加载完成等
+    private ADFrameImageLoadListener mFrameLoadListener;  // 感觉是播放暂停是显示一个广告帧图
+    private ScreenEventReceiver mScreenReceiver;  // 响应解锁或灭屏的Intent
 
     private Surface videoSurface;
 
@@ -532,7 +532,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
         @Override
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
-                case Intent.ACTION_USER_PRESENT:
+                case Intent.ACTION_USER_PRESENT:   // 解锁的Intent
                     if (playerState == STATE_PAUSING) {
                         if (isRealPause()) {
                             pause();
@@ -541,7 +541,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
                         }
                     }
                     break;
-                case Intent.ACTION_SCREEN_OFF:
+                case Intent.ACTION_SCREEN_OFF:   // 灭屏的Intent
                     if (playerState == STATE_PLAYING){
                         pause();
                     }

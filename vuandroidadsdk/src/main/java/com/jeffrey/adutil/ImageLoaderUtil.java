@@ -31,7 +31,7 @@ public class ImageLoaderUtil {
     private static final int CONNECTION_TIME_OUT = 5 * 1000;
     private static final int READ_TIME_OUT = 30 * 1000;
 
-    private static ImageLoaderUtil mInstance = null;
+    private volatile static ImageLoaderUtil mInstance = null;
     private static ImageLoader mLoader = null;
 
 

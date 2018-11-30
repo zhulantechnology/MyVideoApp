@@ -102,7 +102,6 @@ public class Utils {
         bundle.putInt(PROPNAME_SCREENLOCATION_TOP,screenLocation[1]);
         bundle.putInt(PROPNAME_HEIGHT, view.getWidth());
         bundle.putInt(PROPNAME_HEIGHT, view.getHeight());
-                + " Width: " + view.getWidth() + " Height: " + view.getHeight());
 
         return bundle;
     }

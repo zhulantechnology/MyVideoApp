@@ -242,7 +242,7 @@ public class CourseAdapter extends BaseAdapter {
 
     //动态添加ImageView
     private ImageView createImageView(String url) {
-        ImageView photoView = new ImageView(mContext);
+        ImageView photoView = new ImageView(mContext); 
         LinearLayout.LayoutParams params = new LinearLayout.
                 LayoutParams(Utils.dip2px(mContext, 100),
                 LinearLayout.LayoutParams.MATCH_PARENT);
