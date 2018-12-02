@@ -93,7 +93,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
             switch (msg.what) {
                 case TIME_MSG:
                     if (isPlaying()) {
-                        listener.onBufferUpdate(getCurrentPosition());
+                        listener.onBufferUpdate(getCurrentPosition());  //向服务端发送播放进度
                         sendEmptyMessageDelayed(TIME_MSG, TIME_INVAL);
                     }
                     break;
@@ -211,6 +211,8 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
         return false;
     }
 
+    // 播放器处于就绪状态，这个方法不是调用的，而是因为load中实现了mediaPlayer.prepareAsync
+    // 才会回调onPrepared方法
     @Override
     public void onPrepared(MediaPlayer mp) {
         startPlayView();
@@ -262,6 +264,7 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
             entryResumeState(); //置为播放中的状态值
             mediaPlayer.setOnSeekCompleteListener(null);
             mediaPlayer.start();
+            // 只有在resume的时候开始发送消息，在别的状态要remove掉
             mHandler.sendEmptyMessage(TIME_MSG);
             showPauseView(true);
         } else {
@@ -527,7 +530,9 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
             getContext().unregisterReceiver(mScreenReceiver);
         }
     }
-
+    /**
+     * 监听锁屏事件的广播接收器
+     */
     private class ScreenEventReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

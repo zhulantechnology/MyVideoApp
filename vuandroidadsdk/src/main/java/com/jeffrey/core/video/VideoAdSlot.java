@@ -166,7 +166,12 @@ public class VideoAdSlot implements ADVideoPlayerListener {
 
     @Override
     public void onBufferUpdate(int time) {
-
+        try {
+            // 向服务端发送报告视频播放到了第几秒
+           // ReportManager.suReport(mXAdInstance.middleMonitor, time / SDKConstant.MILLION_UNIT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // 实现play层接口，从小屏到全屏播放功能
