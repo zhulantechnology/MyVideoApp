@@ -8,7 +8,6 @@ import com.jeffrey.module.monitor.emevent.EMEvent;
 import java.util.ArrayList;
 
 /**
- * @author: qndroid
  * @function: 广告json value节点， 节点名字记得修改一下
  * @date: 16/6/13
  */

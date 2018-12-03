@@ -617,9 +617,12 @@ MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, Texture
     }
 
 
+    /**
+     * 供业务层来实现具体的回调逻辑
+     */
     public interface ADVideoPlayerListener {
-        public void onBufferUpdate(int time);
-        public void onClickFullScreenBtn();
+        public void onBufferUpdate(int time);  // 视频播放器播放到了第几秒
+        public void onClickFullScreenBtn(); // 跳转到全屏播放
         public void onClickVideo();
         public void onClickBackBtn();
         public void onClickPlay();

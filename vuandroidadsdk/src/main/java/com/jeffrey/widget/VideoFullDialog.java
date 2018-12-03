@@ -49,7 +49,7 @@ public class VideoFullDialog extends Dialog implements ADVideoPlayerListener {
 
     public VideoFullDialog(Context context, CustomVideoView videoView, AdValue instance,
                            int position) {
-        super(context, R.style.dialog_full_screen);
+        super(context, R.style.dialog_full_screen); // 通过style的设置，保证我们Dialog的全屏
         mContext = context;
         mXAdInstance = instance;
         mPosition = position;

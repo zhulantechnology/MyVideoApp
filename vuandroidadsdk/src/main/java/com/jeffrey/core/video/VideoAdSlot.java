@@ -16,10 +16,11 @@ import com.jeffrey.widget.VideoFullDialog;
 import com.jeffrey.widget.VideoFullDialog.FullToSmallListener;
 
 /**
+ * 视频业务逻辑层
  * Created by Jun.wang on 2018/9/11.
  */
 
-// 视频业务逻辑层
+
 public class VideoAdSlot implements ADVideoPlayerListener {
     private Context mContext;
     //UI
@@ -75,7 +76,10 @@ public class VideoAdSlot implements ADVideoPlayerListener {
         }
     }
 
-    //这个滑动的更新只是提供一个功能，其实这里不能自动检测，是需要放在listview或者scrollView中才可以
+    /**
+     * 这个滑动的更新只是提供一个功能，其实这里不能自动检测，
+     * 是需要放在listview或者scrollView中才可以
+     */
     public void updateAdInScrollView() {
         int currentArea = Utils.getVisiblePercent(mParentView);
         //小于0表示未出现在屏幕上，不做任何处理
